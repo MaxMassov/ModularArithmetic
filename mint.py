@@ -41,3 +41,15 @@ class mint(int):
         instance = super(mint, cls).__new__(cls, value % modulus)
         instance.modulus = modulus
         return instance
+    
+    def __str__(self):
+
+        """Prints out a number without modulus (informal style)."""
+
+        return f"{int(self)}"
+    
+    def __repr__(self):
+
+        """Prints out a number with modulus (formal style)."""
+
+        return f"{self.__class__.__name__}({self}, mod={self.modulus})"
