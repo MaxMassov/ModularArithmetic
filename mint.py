@@ -4,12 +4,19 @@ class mint(int):
 
     """Represents an integer number from the specified modular system."""
 
+    DISABLE_INT2MINT_CONVERSION = False
+    """
+    Flag that defines behaviour of operations between int and mint. True means 
+    these operations are undefined, False -- defined. Defaults to False.
+    """
+
     # Error raised when attempting operations between different modular systems
     __DIFFERENT_MODULAR_SYSTEMS_ERROR = ValueError(
             '''You cannot directly operate on numbers from 
                 different modular systems without first aligning 
                 them to a common modulus.'''
         )
+
 
     def __new__(cls, value: int, mod: int):
 
@@ -44,6 +51,143 @@ class mint(int):
         instance.mod = mod
         return instance
     
+
+    def __neg__(self):
+        return NotImplemented
+    
+    def __invert__(self):
+        return NotImplemented
+    
+    def __add__(self, value):
+        return NotImplemented
+    
+    def __radd__(self, value):
+        return NotImplemented
+    
+    def __sub__(self, value):
+        return NotImplemented
+    
+    def __rsub__(self, value):
+        return NotImplemented
+
+    def __mul__(self, value):
+        return NotImplemented
+    
+    def __rmul__(self, value):
+        return NotImplemented
+    
+    def __pow__(self, value):
+        return NotImplemented
+    
+    def __rpow__(self, value: int):
+        return NotImplemented
+
+    def __floordiv__(self, value):
+        return NotImplemented
+    
+    def __rfloordiv__(self, value: int):
+        return NotImplemented
+    
+    def __truediv__(self, value):
+        return self.__floordiv__(value)
+    
+    def __rtruediv__(self, value: int):
+        return NotImplemented
+    
+    def __mod__(self, value: int):
+        return NotImplemented
+    
+    def __rmod__(self, value: int):
+        return NotImplemented
+    
+    def __divmod__(self, value: int, /) -> tuple:
+        return NotImplemented
+    
+    def __rdivmod__(self, value: int):
+        return NotImplemented
+    
+    def __and__(self, value: int):
+        return NotImplemented
+    
+    def __or__(self, value: int):
+        return NotImplemented
+    
+    def __xor__(self, value: int):
+        return NotImplemented
+
+    def __lshift__(self, value: int):
+        return NotImplemented
+    
+    def __rshift__(self, value: int):
+        return NotImplemented
+    
+    def __rand__(self, value: int):
+        return NotImplemented
+    
+    def __ror__(self, value: int):
+        return NotImplemented
+    
+    def __rxor__(self, value: int):
+        return NotImplemented
+    
+    def __rlshift__(self, value: int):
+        return NotImplemented
+    def __rrshift__(self, value: int):
+        return NotImplemented
+    
+    def __pos__(self):
+        return NotImplemented
+    
+    def __trunc__(self):
+        return NotImplemented
+    
+    def __ceil__(self):
+        return NotImplemented
+    
+    def __floor__(self):
+        return NotImplemented
+    #def __round__(self, ndigits: SupportsIndex = ..., /) -> int: ...
+
+    def __getnewargs__(self) -> tuple:
+        return NotImplemented
+    
+    def __eq__(self, value: object):
+        return NotImplemented
+    
+    def __ne__(self, value: object):
+        return NotImplemented
+    
+    def __lt__(self, value: int):
+        return NotImplemented
+    
+    def __le__(self, value: int):
+        return NotImplemented
+    
+    def __gt__(self, value: int):
+        return NotImplemented
+    
+    def __ge__(self, value: int):
+        return NotImplemented
+    
+    def __float__(self) -> float:
+        return NotImplemented
+    
+    def __int__(self) -> int:
+        return NotImplemented
+    
+    def __abs__(self):
+        return NotImplemented
+    
+    def __hash__(self) -> int: 
+        return NotImplemented
+    
+    def __bool__(self) -> bool:
+        return NotImplemented
+    
+    def __index__(self) -> int:
+        return NotImplemented
+
+
 
     def __str__(self) -> str:
 
