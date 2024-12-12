@@ -1,3 +1,4 @@
+from functools import wraps
 import re
 
 class mint(int):
@@ -68,18 +69,84 @@ class mint(int):
     def __invert__(self):
         
         """
-        Implements modular int inversion behaviour (~ operation).
+        Implements modular int inversion (~ operation).
         
         Returns:
             mint: A new instance of the modular integer
-                which is equal to inverted prevoius value.
+                which is equal to inverted previous value.
         """
 
         return self.__class__(~int(self), self.mod)
 
+    @staticmethod
+    def __check_value(method):
+
+        """
+        Decorator that checks if the method called with a relevant value.
+
+        Args:
+            method (function): A mint method between two values.
+
+        Returns:
+            wrapper (function): A function that checks if the method called 
+                with a relevant value.
+
+        """
+
+        @wraps(method)
+        def wrapper(self, *args, **kwargs):
+
+            """
+            Function that checks if the method called with a relevant value.
+
+            Args:
+                value (mint|int): the value to which the method will be applied.
+
+            Returns:
+                mint: A new instance of the modular integer
+                    which is equal to result of applying
+                    method to self value and given value.
+
+            Raises:
+                TypeError: If more or less than one arrgument is given.
+                ValueError: If the given mint value is not from the same
+                    modular system as self.
+                NotImplementedError: If the value is instance of int (not mint),
+                    but int to mint conversion disabled.
+            """
+
+            value = None
+            if len(args) == 1:
+                value = args[0]
+            elif len(kwargs.values()) == 1:
+                value = kwargs.values()[0]
+            if value is None:
+                raise TypeError(f"Method {method.__name__}() takes one argument \
+                                ({len(args) + len(kwargs.values())} given).")
+            
+            if isinstance(value, mint):
+                if self.mod != value.mod:
+                    raise mint.__DIFFERENT_MODULAR_SYSTEMS_ERROR
+                return method(self, value)
+            elif isinstance(value, int):
+                if mint.DISABLE_INT2MINT_CONVERSION:
+                    raise NotImplementedError(f"Int to modular int conversion is disabled, \
+                        so the {method.__name__}() cannot be done.")
+                return method(self, self.__class__(value, self.mod))
+            return NotImplemented
+        return wrapper
+
     
+    @__check_value
     def __add__(self, value):
-        return NotImplemented
+
+        """
+        Impements the addition of 2 modular integers or 
+        modular integer and integer.
+
+        See __check_value decorator
+        """
+        return self.__class__(super().__add__(value), self.mod)
     
     def __radd__(self, value):
         return NotImplemented
