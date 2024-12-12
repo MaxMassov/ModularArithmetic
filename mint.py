@@ -53,8 +53,12 @@ class mint(int):
     
 
     def __neg__(self):
-        return NotImplemented
+
+        """Implements unary minus - behaviour."""
+
+        return self.__class__(-int(self), self.mod)
     
+
     def __invert__(self):
         return NotImplemented
     
@@ -172,8 +176,8 @@ class mint(int):
     def __float__(self) -> float:
         return NotImplemented
     
-    def __int__(self) -> int:
-        return NotImplemented
+    # def __int__(self) -> int:
+    #     return NotImplemented
     
     def __abs__(self):
         return NotImplemented
