@@ -54,7 +54,13 @@ class mint(int):
 
     def __neg__(self):
 
-        """Implements unary minus - behaviour."""
+        """
+        Implements unary minus - behaviour.
+        
+        Returns:
+            mint: A new instance of the modular integer
+                which is equal to -previous_value.
+        """
 
         return self.__class__(-int(self), self.mod)
     
