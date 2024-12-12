@@ -66,7 +66,17 @@ class mint(int):
     
 
     def __invert__(self):
-        return NotImplemented
+        
+        """
+        Implements modular int inversion behaviour (~ operation).
+        
+        Returns:
+            mint: A new instance of the modular integer
+                which is equal to inverted prevoius value.
+        """
+
+        return self.__class__(~int(self), self.mod)
+
     
     def __add__(self, value):
         return NotImplemented
