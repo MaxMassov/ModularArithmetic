@@ -197,7 +197,7 @@ class mint:
     @_check_value
     def __add__(self, value):
         """
-        Impements the addition of 2 modular integers or 
+        Implements the addition of 2 modular integers or 
         a modular integer and an integer|float|bool.
 
         See __check_value decorator
@@ -207,7 +207,7 @@ class mint:
     @_check_value
     def __radd__(self, value):
         """
-        Impements the addition of an integer|float|bool and a modular integer.
+        Implements the addition of an integer|float|bool and a modular integer.
 
         See __check_value decorator
         """
@@ -216,7 +216,7 @@ class mint:
     @_check_value
     def __sub__(self, value):
         """
-        Impements the subtraction of of 2 modular integers or 
+        Implements the subtraction of of 2 modular integers or 
         a modular integer and an integer|float|bool.
 
         See __check_value decorator
@@ -226,17 +226,30 @@ class mint:
     @_check_value
     def __rsub__(self, value):
         """
-        Impements the subtraction of an integer|float|bool and a modular integer.
+        Implements the subtraction of an integer|float|bool and a modular integer.
 
         See __check_value decorator
         """
         return self.__class__(value.value - self._value, self._mod)
 
+    @_check_value
     def __mul__(self, value):
-        return NotImplemented
+        """
+        Implements the multiplication of 2 modular integers or 
+        a modular integer and an integer|float|bool.
+
+        See __check_value decorator
+        """
+        return self.__class__(self._value * value.value, self._mod)  
     
+    @_check_value
     def __rmul__(self, value):
-        return NotImplemented
+        """
+        Implements the multiplications of an integer|float|bool and a modular integer.
+
+        See __check_value decorator
+        """
+        return self.__class__(value.value * self._value, self._mod)  
     
     def __pow__(self, value):
         return NotImplemented
