@@ -264,7 +264,7 @@ class mint:
     @_check_value
     def __pow__(self, value):
         """
-        Implements the raising modular integer the power 
+        Implements the raising modular integer to the power 
         of mint|integer|float|bool.
 
         See __check_value decorator
@@ -276,8 +276,15 @@ class mint:
             return self.__class__(pow(self._value, value, self._mod), self._mod)
         return self.__class__(pow(self._value, value.value, self._mod), self._mod)  
     
-    def __rpow__(self, value: int):
-        return NotImplemented
+    @_check_value
+    def __rpow__(self, value):
+        """
+        Implements the raising integer|float|bool 
+        to the power of mint.
+
+        See __check_value decorator
+        """
+        return self.__class__(pow(value.value, self._value, self._mod), self._mod)  
 
     def __floordiv__(self, value):
         return NotImplemented
