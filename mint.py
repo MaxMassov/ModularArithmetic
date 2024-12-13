@@ -2,12 +2,13 @@ from functools import wraps
 import inspect
 from typing import Callable
 import re
+from math import gcd
 
 class mint:
 
     """Represents an integer number from the specified modular system."""
 
-    __slots__ = ("_value", "_mod")
+    __slots__ = ("_value", "_mod", "_gcd")
 
     #ToDo: property func or setter
     _DISABLE_MINT2INT_CONVERSION = False
@@ -45,6 +46,7 @@ class mint:
         # initializing mint instance
         self._value = value % mod
         self._mod = mod
+        self._gcd = gcd(self._value, self._mod)
     
     @property
     def value(self):
@@ -55,6 +57,11 @@ class mint:
     def mod(self):
         """Read-only property for modulus."""
         return self._mod  
+    
+    @property
+    def vm_gcd(self):
+        """Read-only property for value-modulus gcd."""
+        return self._gcd  
 
     def __setattr__(self, name, value):
         """
@@ -163,7 +170,8 @@ class mint:
                 TypeError: If more or less than one arrgument is given.
                 ValueError: If the given mint value is not from the same
                     modular system as self.
-                TypeError: If the value is instance of int (not mint),
+                TypeError: If the value is instance of int (not mint) 
+                    and is not being used as a power of mint,
                     but int to mint conversion disabled.
             """
             value = None
@@ -187,6 +195,8 @@ class mint:
             elif isinstance(value, bool):
                 value = int(value)
             if isinstance(value, int):
+                if method.__name__ in ["__pow__"]:
+                    return method(self, value)
                 if mint._DISABLE_MINT2INT_CONVERSION:
                     raise TypeError(f"""Int to modular int conversion was disabled, 
                                     so the {method.__name__}() cannot be done.""")
@@ -251,8 +261,20 @@ class mint:
         """
         return self.__class__(value.value * self._value, self._mod)  
     
+    @_check_value
     def __pow__(self, value):
-        return NotImplemented
+        """
+        Implements the raising modular integer the power 
+        of mint|integer|float|bool.
+
+        See __check_value decorator
+        """
+        if isinstance(value, int):
+            if value < 0 and self._gcd != 1:
+                raise ValueError(f"""base is not invertible for the given modulus 
+                                 (gcd({self._value}, {self._gcd}) = {self._gcd})""")
+            return self.__class__(pow(self._value, value, self._mod), self._mod)
+        return self.__class__(pow(self._value, value.value, self._mod), self._mod)  
     
     def __rpow__(self, value: int):
         return NotImplemented
