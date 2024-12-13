@@ -291,6 +291,24 @@ class mint(int):
             
         return super().__int__()
     
+
+    def to_int(self, base: int = 10):
+
+        """
+        Custom method supporting base conversion.
+        
+        Returns:
+            int: modular int with base `base` converted 
+                to int with base 10
+        
+        Raises:
+            See __int__() method 
+        """
+
+        if not (2 <= base <= 36):
+            raise ValueError("Base must be between 2 and 36.")
+        return int(str(self), base)
+    
     
     def __abs__(self):
         return NotImplemented
