@@ -8,7 +8,7 @@ class mint(int):
     """Represents an integer number from the specified modular system."""
 
     #ToDo: property func or setter
-    DISABLE_INT2MINT_CONVERSION = False
+    _DISABLE_MINT2INT_CONVERSION = False
     """
     Flag that defines behaviour of operations between int and mint. True means 
     these operations are undefined, False -- defined. Defaults to False.
@@ -57,9 +57,12 @@ class mint(int):
     
     @property
     def mod(self):
+
         """Read-only property for modulus."""
+        
         return self._mod
     
+
     def __setattr__(self, name, value):
 
         """
@@ -72,6 +75,66 @@ class mint(int):
         if hasattr(self, '_mod') and name == '_mod':
             raise AttributeError(f"{name} is read-only.")
         super().__setattr__(name, value)
+
+
+    @property
+    def mint2int(self) -> bool:
+
+        """Access to mint._DISABLE_MINT2INT_CONVERSION value."""
+        
+        return mint._DISABLE_MINT2INT_CONVERSION
+
+
+    @classmethod
+    def set_mint2int(cls, value: bool):
+
+        """
+        Set mint._DISABLE_MINT2INT_CONVERSION to a `value`
+        
+        Arguments:
+            value (bool): new value of mint._DISABLE_MINT2INT_CONVERSION 
+                (can be int, but must be equal to either 1 or 0).
+        
+        Raises:
+            ValueError: If value has not a relevant value.
+        """
+
+        if isinstance(value, int) and (value == 1 or value == 0):
+            value = bool(value)
+        if isinstance(value, bool):
+            cls._DISABLE_MINT2INT_CONVERSION = value
+        else:
+            raise ValueError("mint._DISABLE_MINT2INT_CONVERSION must be bool.")
+    
+
+    @classmethod
+    def change_mint2int(cls):
+
+        """
+        Set mint._DISABLE_MINT2INT_CONVERSION to the opposite value
+        """
+        
+        cls._DISABLE_MINT2INT_CONVERSION = not cls._DISABLE_MINT2INT_CONVERSION
+
+
+    @classmethod
+    def activate_mint2int(cls):
+
+        """
+        Set mint._DISABLE_MINT2INT_CONVERSION to False
+        """
+        
+        cls._DISABLE_MINT2INT_CONVERSION = False
+
+
+    @classmethod
+    def disable_mint2int(cls):
+
+        """
+        Set mint._DISABLE_MINT2INT_CONVERSION to True
+        """
+        
+        cls._DISABLE_MINT2INT_CONVERSION = True
 
 
     def __neg__(self):
@@ -155,7 +218,7 @@ class mint(int):
             elif isinstance(value, bool):
                 value = int(value)
             if isinstance(value, int):
-                if mint.DISABLE_INT2MINT_CONVERSION:
+                if mint._DISABLE_MINT2INT_CONVERSION:
                     raise TypeError(f"Int to modular int conversion was disabled, \
                         so the {method.__name__}() cannot be done.")
                 return method(self, self.__class__(value, self._mod))
@@ -299,7 +362,7 @@ class mint(int):
                 and method was called out of the class
         """
 
-        if mint.DISABLE_INT2MINT_CONVERSION:
+        if mint._DISABLE_MINT2INT_CONVERSION:
             # Check the call stack
             stack = inspect.stack()
             caller_class = stack[1].frame.f_locals.get("self", None)
