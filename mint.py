@@ -1,10 +1,12 @@
 from functools import wraps
+import inspect
 import re
 
 class mint(int):
 
     """Represents an integer number from the specified modular system."""
 
+    #ToDo: property func or setter; make mod final
     DISABLE_INT2MINT_CONVERSION = False
     """
     Flag that defines behaviour of operations between int and mint. True means 
@@ -12,7 +14,7 @@ class mint(int):
     """
 
     # Error raised when attempting operations between different modular systems
-    __DIFFERENT_MODULAR_SYSTEMS_ERROR = ValueError(
+    _DIFFERENT_MODULAR_SYSTEMS_ERROR = ValueError(
             '''You cannot directly operate on numbers from 
                 different modular systems without first aligning 
                 them to a common modulus.'''
@@ -78,8 +80,9 @@ class mint(int):
 
         return self.__class__(~int(self), self.mod)
 
+
     @staticmethod
-    def __check_value(method):
+    def _check_value(method):
 
         """
         Decorator that checks if the method called with a relevant value.
@@ -111,7 +114,7 @@ class mint(int):
                 TypeError: If more or less than one arrgument is given.
                 ValueError: If the given mint value is not from the same
                     modular system as self.
-                NotImplementedError: If the value is instance of int (not mint),
+                TypeError: If the value is instance of int (not mint),
                     but int to mint conversion disabled.
             """
 
@@ -126,18 +129,18 @@ class mint(int):
             
             if isinstance(value, mint):
                 if self.mod != value.mod:
-                    raise mint.__DIFFERENT_MODULAR_SYSTEMS_ERROR
+                    raise mint._DIFFERENT_MODULAR_SYSTEMS_ERROR
                 return method(self, value)
             elif isinstance(value, int):
                 if mint.DISABLE_INT2MINT_CONVERSION:
-                    raise NotImplementedError(f"Int to modular int conversion is disabled, \
+                    raise TypeError(f"Int to modular int conversion was disabled, \
                         so the {method.__name__}() cannot be done.")
                 return method(self, self.__class__(value, self.mod))
             return NotImplemented
         return wrapper
 
     
-    @__check_value
+    @_check_value
     def __add__(self, value):
 
         """
@@ -259,8 +262,30 @@ class mint(int):
     def __float__(self) -> float:
         return NotImplemented
     
-    # def __int__(self) -> int:
-    #     return NotImplemented
+
+    def __int__(self) -> int:
+
+        """
+        Converts modular int to int
+        
+        Returns:
+            int: modular int converted to int
+
+        Raises:
+            TypeError: When mint to int conversion was disabled
+                and method was called out of the class
+        """
+
+        if mint.DISABLE_INT2MINT_CONVERSION:
+            # Check the call stack
+            stack = inspect.stack()
+            caller_class = stack[1].frame.f_locals.get("self", None)
+            
+            if not isinstance(caller_class, mint):
+                raise TypeError("mint to int conversion was disabled.")
+            
+        return super().__int__()
+    
     
     def __abs__(self):
         return NotImplemented
