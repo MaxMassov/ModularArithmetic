@@ -7,7 +7,7 @@ class mint(int):
 
     """Represents an integer number from the specified modular system."""
 
-    #ToDo: property func or setter; make mod final
+    #ToDo: property func or setter
     DISABLE_INT2MINT_CONVERSION = False
     """
     Flag that defines behaviour of operations between int and mint. True means 
@@ -52,9 +52,27 @@ class mint(int):
         
         # initializing mint instance
         instance = super(mint, cls).__new__(cls, value % mod)
-        instance.mod = mod
+        instance._mod = mod # modulus cannot be changed
         return instance
     
+    @property
+    def mod(self):
+        """Read-only property for modulus."""
+        return self._mod
+    
+    def __setattr__(self, name, value):
+
+        """
+        Makes modulus read-only.
+        
+        Raises:
+            AttributeError: When name == _mod
+        """
+
+        if hasattr(self, '_mod') and name == '_mod':
+            raise AttributeError(f"{name} is read-only.")
+        super().__setattr__(name, value)
+
 
     def __neg__(self):
 
@@ -66,7 +84,7 @@ class mint(int):
                 which is equal to -previous_value.
         """
 
-        return self.__class__(-int(self), self.mod)
+        return self.__class__(-int(self), self._mod)
     
 
     def __invert__(self):
@@ -79,7 +97,7 @@ class mint(int):
                 which is equal to inverted previous value.
         """
 
-        return self.__class__(~int(self), self.mod)
+        return self.__class__(~int(self), self._mod)
 
 
     @staticmethod
@@ -129,7 +147,7 @@ class mint(int):
                                 ({len(args) + len(kwargs.values())} given).")
             
             if isinstance(value, mint):
-                if self.mod != value.mod:
+                if self._mod != value.mod:
                     raise mint._DIFFERENT_MODULAR_SYSTEMS_ERROR
                 return method(self, value)
             if isinstance(value, float):
@@ -140,7 +158,7 @@ class mint(int):
                 if mint.DISABLE_INT2MINT_CONVERSION:
                     raise TypeError(f"Int to modular int conversion was disabled, \
                         so the {method.__name__}() cannot be done.")
-                return method(self, self.__class__(value, self.mod))
+                return method(self, self.__class__(value, self._mod))
             return NotImplemented
         return wrapper
 
@@ -154,7 +172,7 @@ class mint(int):
 
         See __check_value decorator
         """
-        return self.__class__(super().__add__(value), self.mod)
+        return self.__class__(super().__add__(value), self._mod)
     
     def __radd__(self, value):
         return NotImplemented
@@ -344,7 +362,7 @@ class mint(int):
             str: A formal representation of the class instance.
         """
 
-        return f"{self.__class__.__name__}({self}, mod={self.mod})"
+        return f"{self.__class__.__name__}({self}, mod={self._mod})"
     
 
     def parametric(self, param_name : str = "k") -> str:
@@ -367,4 +385,4 @@ class mint(int):
         if re.search(r"\s", param_name):
             raise ValueError("param_name must be represented by one word.")
         
-        return f"{self} + {self.mod} * {param_name}"
+        return f"{self} + {self._mod} * {param_name}"
