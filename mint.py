@@ -14,14 +14,6 @@ class mint(int):
     these operations are undefined, False -- defined. Defaults to False.
     """
 
-    # Error raised when attempting operations between different modular systems
-    _DIFFERENT_MODULAR_SYSTEMS_ERROR = ValueError(
-            '''You cannot directly operate on numbers from 
-                different modular systems without first aligning 
-                them to a common modulus.'''
-        )
-
-
     def __new__(cls, value: int, mod: int):
 
         """
@@ -55,6 +47,7 @@ class mint(int):
         instance._mod = mod # modulus cannot be changed
         return instance
     
+
     @property
     def mod(self):
 
@@ -211,7 +204,11 @@ class mint(int):
             
             if isinstance(value, mint):
                 if self._mod != value.mod:
-                    raise mint._DIFFERENT_MODULAR_SYSTEMS_ERROR
+                    raise ValueError(
+                            '''You cannot directly operate on numbers from 
+                                different modular systems without first aligning 
+                                them to a common modulus.'''
+                        )
                 return method(self, value)
             if isinstance(value, float):
                 value = int(value)
