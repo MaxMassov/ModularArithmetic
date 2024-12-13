@@ -1,5 +1,6 @@
 from functools import wraps
 import inspect
+from typing import Callable
 import re
 
 class mint(int):
@@ -82,7 +83,7 @@ class mint(int):
 
 
     @staticmethod
-    def _check_value(method):
+    def _check_value(method: Callable):
 
         """
         Decorator that checks if the method called with a relevant value.
@@ -131,7 +132,11 @@ class mint(int):
                 if self.mod != value.mod:
                     raise mint._DIFFERENT_MODULAR_SYSTEMS_ERROR
                 return method(self, value)
-            elif isinstance(value, int):
+            if isinstance(value, float):
+                value = int(value)
+            elif isinstance(value, bool):
+                value = int(value)
+            if isinstance(value, int):
                 if mint.DISABLE_INT2MINT_CONVERSION:
                     raise TypeError(f"Int to modular int conversion was disabled, \
                         so the {method.__name__}() cannot be done.")
@@ -298,7 +303,6 @@ class mint(int):
     
     def __index__(self) -> int:
         return NotImplemented
-
 
 
     def __str__(self) -> str:
