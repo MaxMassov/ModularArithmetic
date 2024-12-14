@@ -170,9 +170,10 @@ class mint:
                 TypeError: If more or less than one arrgument is given.
                 ValueError: If the given mint value is not from the same
                     modular system as self.
-                TypeError: If the value is instance of int (not mint) 
-                    and is not being used as a power of mint,
-                    but int to mint conversion disabled.
+                TypeError: If the value is instance of int|float|bool,
+                    but int to mint conversion disabled, 
+                    and the value is not being used as an argument of the 
+                    following methods: __pow__, __floordiv__, __truediv__
             """
             value = None
             if len(args) == 1:
@@ -195,7 +196,7 @@ class mint:
             elif isinstance(value, bool):
                 value = int(value)
             if isinstance(value, int):
-                if method.__name__ in ["__pow__"]:
+                if method.__name__ in ["__pow__", "__floordiv__", "__truediv__"]:
                     return method(self, value)
                 if mint._DISABLE_MINT2INT_CONVERSION:
                     raise TypeError(f"""Int to modular int conversion was disabled, 
@@ -267,6 +268,10 @@ class mint:
         Implements the raising modular integer to the power 
         of mint|integer|float|bool.
 
+        Raises:
+            ValueError: When the value is less than 0 and modular integer
+                is not invertable.
+
         See __check_value decorator
         """
         if isinstance(value, int):
@@ -286,14 +291,40 @@ class mint:
         """
         return self.__class__(pow(value.value, self._value, self._mod), self._mod)  
 
+    @_check_value
     def __floordiv__(self, value):
-        return NotImplemented
+        """
+        Implements the floor division modular integer by 
+        mint|integer|float|bool.
+
+        See __check_value decorator
+        """
+        return self.__truediv__(value)
     
     def __rfloordiv__(self, value: int):
         return NotImplemented
     
+    @_check_value
     def __truediv__(self, value):
-        return self.__floordiv__(value)
+        """
+        Implements the division modular integer by 
+        mint|integer|float|bool.
+
+        Raises:
+            ValueError: If divider is negative
+            ZeroDivisionError: If divider is equal to 0.
+            ValueError: If mint value is not divisible by a divider.
+
+        See __check_value decorator
+        """
+        divider = value if isinstance(value, int) else value.value
+        if divider < 0:
+            raise ValueError("Not modular integer divider must be positive")
+        if divider == 0:
+            raise ZeroDivisionError("division by zero.")
+        if self._value % divider != 0:
+            raise ValueError(f"{self._value} is not divisible by {divider}.")
+        return self.__class__(self._value // divider, self._mod // gcd(self._mod, divider))
     
     def __rtruediv__(self, value: int):
         return NotImplemented
