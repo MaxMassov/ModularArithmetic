@@ -79,12 +79,12 @@ class mint:
     @property
     def mint2int(self) -> bool:
         """Access to mint._DISABLE_MINT2INT_CONVERSION value."""
-        return mint._DISABLE_MINT2INT_CONVERSION
+        return not mint._DISABLE_MINT2INT_CONVERSION
 
     @classmethod
     def set_mint2int(cls, value: bool):
         """
-        Set mint._DISABLE_MINT2INT_CONVERSION to a `value`
+        Set mint._DISABLE_MINT2INT_CONVERSION to a !`value`
         
         Arguments:
             value (bool): new value of mint._DISABLE_MINT2INT_CONVERSION 
@@ -96,7 +96,7 @@ class mint:
         if isinstance(value, int) and (value == 1 or value == 0):
             value = bool(value)
         if isinstance(value, bool):
-            cls._DISABLE_MINT2INT_CONVERSION = value
+            cls._DISABLE_MINT2INT_CONVERSION = not value
         else:
             raise ValueError("mint._DISABLE_MINT2INT_CONVERSION must be bool.")  
 
@@ -173,7 +173,8 @@ class mint:
                 TypeError: If the value is instance of int|float|bool,
                     but int to mint conversion disabled, 
                     and the value is not being used as an argument of the 
-                    following methods: __pow__, __floordiv__, __truediv__
+                    following methods: __mul__, __rmul__, __pow__, __floordiv__, 
+                    __truediv__
             """
             value = None
             if len(args) == 1:
@@ -196,7 +197,8 @@ class mint:
             elif isinstance(value, bool):
                 value = int(value)
             if isinstance(value, int):
-                if method.__name__ in ["__pow__", "__floordiv__", "__truediv__"]:
+                if method.__name__ in ["__mul__", "__rmul__", "__pow__", 
+                                       "__floordiv__", "__truediv__"]:
                     return method(self, value)
                 if mint._DISABLE_MINT2INT_CONVERSION:
                     raise TypeError(f"""Int to modular int conversion was disabled, 
@@ -251,16 +253,19 @@ class mint:
 
         See __check_value decorator
         """
+        if isinstance(value, int):
+            if value == 0:
+                return self.__class__(0, self._mod)
+            return self.__class__(self._value * value, self._mod * value)
         return self.__class__(self._value * value.value, self._mod)  
     
-    @_check_value
     def __rmul__(self, value):
         """
         Implements the multiplications of an integer|float|bool and a modular integer.
 
         See __check_value decorator
         """
-        return self.__class__(value.value * self._value, self._mod)  
+        return self.__mul__(value)  
     
     @_check_value
     def __pow__(self, value):
@@ -291,7 +296,6 @@ class mint:
         """
         return self.__class__(pow(value.value, self._value, self._mod), self._mod)  
 
-    @_check_value
     def __floordiv__(self, value):
         """
         Implements the floor division modular integer by 
