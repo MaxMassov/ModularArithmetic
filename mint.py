@@ -400,11 +400,36 @@ class mint:
     def __getnewargs__(self) -> tuple:
         return NotImplemented
     
-    def __eq__(self, value: object):
-        return NotImplemented
+    def __eq__(self, value: object) -> bool:
+        """
+        Implements the logic of equality.
+
+        Args:
+            value (object): value to compare
+
+        Returns:
+            bool: If the value is equal to self
+                (for mint -- equality of values and moduluses,
+                for int and mint to int is not disabled
+                -- equality of value mod modulus, otherwise -- false).
+        """
+        if isinstance(value, mint):
+            return self._value == value.value and self._mod == value.mod
+        if isinstance(value, int):
+            return self._value == value % self._mod and not mint._DISABLE_MINT2INT_CONVERSION
+        return False        
     
-    def __ne__(self, value: object):
-        return NotImplemented
+    def __ne__(self, value: object) -> bool:
+        """
+        Implements the logic of unequality.
+
+        Args:
+            value (object): value to compare
+
+        Returns:
+            bool: inverted value of __eq__ method.
+        """
+        return not self.__eq__(value)
     
     def __lt__(self, value: int):
         return NotImplemented
