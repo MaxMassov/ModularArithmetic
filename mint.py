@@ -174,7 +174,7 @@ class mint:
                     but int to mint conversion disabled, 
                     and the value is not being used as an argument of the 
                     following methods: __mul__, __rmul__, __pow__, __floordiv__, 
-                    __truediv__
+                    __truediv__, __rfloordiv__, __rtruediv__
             """
             value = None
             if len(args) == 1:
@@ -198,7 +198,8 @@ class mint:
                 value = int(value)
             if isinstance(value, int):
                 if method.__name__ in ["__mul__", "__rmul__", "__pow__", 
-                                       "__floordiv__", "__truediv__"]:
+                                       "__floordiv__", "__truediv__",
+                                       "__rfloordiv__", "__rtruediv__"]:
                     return method(self, value)
                 if mint._DISABLE_MINT2INT_CONVERSION:
                     raise TypeError(f"""Int to modular int conversion was disabled, 
@@ -298,20 +299,24 @@ class mint:
 
     def __floordiv__(self, value):
         """
-        Implements the floor division modular integer by 
+        Implements the floor division of modular integer by 
         mint|integer|float|bool.
 
-        See __check_value decorator
+        See __truediv__ method
         """
         return self.__truediv__(value)
     
-    def __rfloordiv__(self, value: int):
+    def __rfloordiv__(self, value):
+        """
+        The floor division of modular integer
+        by mint|integer|float|bool is not defined.
+        """
         return NotImplemented
     
     @_check_value
     def __truediv__(self, value):
         """
-        Implements the division modular integer by 
+        Implements the division of modular integer by 
         mint|integer|float|bool.
 
         Raises:
@@ -330,7 +335,11 @@ class mint:
             raise ValueError(f"{self._value} is not divisible by {divider}.")
         return self.__class__(self._value // divider, self._mod // gcd(self._mod, divider))
     
-    def __rtruediv__(self, value: int):
+    def __rtruediv__(self, value):
+        """
+        The division of mint|integer|float|bool
+        by modular integer is not defined.
+        """
         return NotImplemented
     
     def __mod__(self, value: int):
