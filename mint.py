@@ -11,7 +11,7 @@ class mint:
     __slots__ = ("_value", "_mod", "_gcd")
 
     #ToDo: property func or setter
-    _DISABLE_MINT2INT_CONVERSION = False
+    _DISABLE_INT2MINT_CONVERSION = False
     """
     Flag that defines behaviour of operations between int and mint. True means 
     these operations are undefined, False -- defined. Defaults to False.
@@ -77,17 +77,17 @@ class mint:
         super().__setattr__(name, value)
 
     @property
-    def mint2int(self) -> bool:
-        """Access to mint._DISABLE_MINT2INT_CONVERSION value."""
-        return not mint._DISABLE_MINT2INT_CONVERSION
+    def int2mint(self) -> bool:
+        """Access to mint._DISABLE_INT2MINT_CONVERSION value."""
+        return not mint._DISABLE_INT2MINT_CONVERSION
 
     @classmethod
-    def set_mint2int(cls, value: bool):
+    def set_int2mint(cls, value: bool):
         """
-        Set mint._DISABLE_MINT2INT_CONVERSION to a !`value`
+        Set mint._DISABLE_INT2MINT_CONVERSION to a !`value`
         
         Arguments:
-            value (bool): new value of mint._DISABLE_MINT2INT_CONVERSION 
+            value (bool): new value of mint._DISABLE_INT2MINT_CONVERSION 
                 (can be int, but must be equal to either 1 or 0).
         
         Raises:
@@ -96,30 +96,30 @@ class mint:
         if isinstance(value, int) and (value == 1 or value == 0):
             value = bool(value)
         if isinstance(value, bool):
-            cls._DISABLE_MINT2INT_CONVERSION = not value
+            cls._DISABLE_INT2MINT_CONVERSION = not value
         else:
-            raise ValueError("mint._DISABLE_MINT2INT_CONVERSION must be bool.")  
+            raise ValueError("mint._DISABLE_INT2MINT_CONVERSION must be bool.")  
 
     @classmethod
-    def change_mint2int(cls):
+    def change_int2mint(cls):
         """
-        Set mint._DISABLE_MINT2INT_CONVERSION to the opposite value
+        Set mint._DISABLE_INT2MINT_CONVERSION to the opposite value
         """
-        cls._DISABLE_MINT2INT_CONVERSION = not cls._DISABLE_MINT2INT_CONVERSION
+        cls._DISABLE_INT2MINT_CONVERSION = not cls._DISABLE_INT2MINT_CONVERSION
 
     @classmethod
-    def activate_mint2int(cls):
+    def activate_int2mint(cls):
         """
-        Set mint._DISABLE_MINT2INT_CONVERSION to False
+        Set mint._DISABLE_INT2MINT_CONVERSION to False
         """
-        cls._DISABLE_MINT2INT_CONVERSION = False
+        cls._DISABLE_INT2MINT_CONVERSION = False
 
     @classmethod
-    def disable_mint2int(cls):
+    def disable_int2mint(cls):
         """
-        Set mint._DISABLE_MINT2INT_CONVERSION to True
+        Set mint._DISABLE_INT2MINT_CONVERSION to True
         """
-        cls._DISABLE_MINT2INT_CONVERSION = True
+        cls._DISABLE_INT2MINT_CONVERSION = True
 
     def __neg__(self):
         """
@@ -201,7 +201,7 @@ class mint:
                                        "__floordiv__", "__truediv__",
                                        "__rfloordiv__", "__rtruediv__"]:
                     return method(self, value)
-                if mint._DISABLE_MINT2INT_CONVERSION:
+                if mint._DISABLE_INT2MINT_CONVERSION:
                     raise TypeError(f"""Int to modular int conversion was disabled, 
                                     so the {method.__name__}() cannot be done.""")
                 return method(self, self.__class__(value, self._mod))
@@ -416,7 +416,7 @@ class mint:
         if isinstance(value, mint):
             return self._value == value.value and self._mod == value.mod
         if isinstance(value, int):
-            return self._value == value % self._mod and not mint._DISABLE_MINT2INT_CONVERSION
+            return self._value == value % self._mod and not mint._DISABLE_INT2MINT_CONVERSION
         return False        
     
     def __ne__(self, value: object) -> bool:
@@ -497,7 +497,7 @@ class mint:
             TypeError: When mint to int conversion was disabled
                 and method was called out of the class
         """
-        if mint._DISABLE_MINT2INT_CONVERSION:
+        if mint._DISABLE_INT2MINT_CONVERSION:
             # Check the call stack
             stack = inspect.stack()
             caller_class = stack[1].frame.f_locals.get("self", None)
