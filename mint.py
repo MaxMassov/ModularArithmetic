@@ -484,7 +484,13 @@ class mint:
         return self._value >= value.value
     
     def __float__(self) -> float:
-        return NotImplemented
+        """
+        Converts modular int to float
+        
+        Returns:
+            float: modular int converted to float
+        """
+        return float(self._value)
 
     def __int__(self) -> int:
         """
@@ -492,19 +498,7 @@ class mint:
         
         Returns:
             int: modular int converted to int
-
-        Raises:
-            TypeError: When mint to int conversion was disabled
-                and method was called out of the class
         """
-        if mint._DISABLE_INT2MINT_CONVERSION:
-            # Check the call stack
-            stack = inspect.stack()
-            caller_class = stack[1].frame.f_locals.get("self", None)
-            
-            if not isinstance(caller_class, mint):
-                raise TypeError("mint to int conversion was disabled.")
-            
         return self._value
     
     def to_int(self, base: int = 10):
@@ -514,9 +508,6 @@ class mint:
         Returns:
             int: modular int with base `base` converted 
                 to int with base 10
-        
-        Raises:
-            See __int__() method 
         """
         if not (2 <= base <= 36):
             raise ValueError("Base must be between 2 and 36.")
