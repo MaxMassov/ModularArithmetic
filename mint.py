@@ -405,7 +405,7 @@ class mint:
         Implements the logic of equality.
 
         Args:
-            value (object): value to compare
+            value (object): value to compare.
 
         Returns:
             bool: If the value is equal to self
@@ -424,24 +424,64 @@ class mint:
         Implements the logic of unequality.
 
         Args:
-            value (object): value to compare
+            value (object): value to compare.
 
         Returns:
             bool: inverted value of __eq__ method.
         """
         return not self.__eq__(value)
     
-    def __lt__(self, value: int):
-        return NotImplemented
+    @_check_value
+    def __lt__(self, value) -> bool:
+        """
+        Implements the logic of comparasion (less).
+
+        Args:
+            value (mint|int|bool|float): value to compare.
+
+        Returns:
+            bool: If self is less than the value.
+        """
+        return self._value < value.value
     
-    def __le__(self, value: int):
-        return NotImplemented
+    @_check_value
+    def __le__(self, value) -> bool:
+        """
+        Implements the logic of comparasion (less or equal).
+
+        Args:
+            value (mint|int|bool|float): value to compare.
+
+        Returns:
+            bool: If self is less than or equal to the value.
+        """
+        return self._value <= value.value
     
-    def __gt__(self, value: int):
-        return NotImplemented
+    @_check_value
+    def __gt__(self, value) -> bool:
+        """
+        Implements the logic of comparasion (greater).
+
+        Args:
+            value (mint|int|bool|float): value to compare.
+
+        Returns:
+            bool: If self is greater than the value.
+        """
+        return self._value > value.value
     
-    def __ge__(self, value: int):
-        return NotImplemented
+    @_check_value
+    def __ge__(self, value: int) -> bool:
+        """
+        Implements the logic of comparasion (greater or equal).
+
+        Args:
+            value (mint|int|bool|float): value to compare.
+
+        Returns:
+            bool: If self is greater than equal to the value.
+        """
+        return self._value >= value.value
     
     def __float__(self) -> float:
         return NotImplemented
