@@ -121,26 +121,6 @@ class mint:
         """
         cls._DISABLE_INT2MINT_CONVERSION = True
 
-    def __neg__(self):
-        """
-        Implements unary minus - behaviour.
-        
-        Returns:
-            mint: A new instance of the modular integer
-                which is equal to -previous_value.
-        """
-        return self.__class__(-self._value, self._mod)
-
-    def __invert__(self):
-        """
-        Implements modular int inversion (~ operation).
-        
-        Returns:
-            mint: A new instance of the modular integer
-                which is equal to inverted previous value.
-        """
-        return self.__class__(~self._value, self._mod)
-
     @staticmethod
     def _check_value(method: Callable):
         """
@@ -354,45 +334,6 @@ class mint:
     def __rdivmod__(self, value: int):
         return NotImplemented
     
-    def __and__(self, value: int):
-        return NotImplemented
-    
-    def __or__(self, value: int):
-        return NotImplemented
-    
-    def __xor__(self, value: int):
-        return NotImplemented
-
-    def __lshift__(self, value: int):
-        return NotImplemented
-    
-    def __rshift__(self, value: int):
-        return NotImplemented
-    
-    def __rand__(self, value: int):
-        return NotImplemented
-    
-    def __ror__(self, value: int):
-        return NotImplemented
-    
-    def __rxor__(self, value: int):
-        return NotImplemented
-    
-    def __rlshift__(self, value: int):
-        return NotImplemented
-    
-    def __rrshift__(self, value: int):
-        return NotImplemented
-    
-    def __pos__(self):
-        """
-        Implements unary plus + behaviour.
-        
-        Returns:
-            mint: self.
-        """
-        return self
-    
     def __trunc__(self):
         """
         Returns trunced value.
@@ -429,9 +370,94 @@ class mint:
         """
         return self
 
+    def __abs__(self):
+        """
+        Returns absolute value (self).
+        
+        Returns:
+            mint: self.
+        """
+        return self
+
+    def __pos__(self):
+        """
+        Implements unary plus + behaviour.
+        
+        Returns:
+            mint: self.
+        """
+        return self
+
+    def __neg__(self):
+        """
+        Implements unary minus - behaviour.
+        
+        Returns:
+            mint: A new instance of the modular integer
+                which is equal to -previous_value.
+        """
+        return self.__class__(-self._value, self._mod)
+
+    def __invert__(self):
+        """
+        Implements modular int inversion (~ operation).
+        
+        Returns:
+            mint: A new instance of the modular integer
+                which is equal to inverted previous value.
+        """
+        return self.__class__(~self._value, self._mod)
+    
+    def __and__(self, value: int):
+        return NotImplemented
+    
+    def __or__(self, value: int):
+        return NotImplemented
+    
+    def __xor__(self, value: int):
+        return NotImplemented
+
+    def __lshift__(self, value: int):
+        return NotImplemented
+    
+    def __rshift__(self, value: int):
+        return NotImplemented
+    
+    def __rand__(self, value: int):
+        return NotImplemented
+    
+    def __ror__(self, value: int):
+        return NotImplemented
+    
+    def __rxor__(self, value: int):
+        return NotImplemented
+    
+    def __rlshift__(self, value: int):
+        return NotImplemented
+    
+    def __rrshift__(self, value: int):
+        return NotImplemented
+    
     def __getnewargs__(self) -> tuple:
         return NotImplemented
     
+    def __contains__(self, item: int) -> bool:
+        """
+        Check if the residue class modulo self._mod of 
+        self._value contains item. If item is not instance of 
+        int, then False.
+
+        Args:
+            item (int): value to check.
+
+        Return:
+            bool: If the residue class modulo self._mod of 
+                self._value contains item.
+        """
+        if isinstance(item, int):
+            return item % self._mod == self._value
+        return False
+
     def __eq__(self, value: object) -> bool:
         """
         Implements the logic of equality.
@@ -545,10 +571,6 @@ class mint:
             raise ValueError("Base must be between 2 and 36.")
         return int(str(self._value), base)
     
-    def __abs__(self):
-        """Returns absolute value (self)."""
-        return self
-    
     def __hash__(self) -> int: 
         return NotImplemented
     
@@ -564,23 +586,6 @@ class mint:
     
     def __index__(self) -> int:
         return NotImplemented
-    
-    def __contains__(self, item: int) -> bool:
-        """
-        Check if the residue class modulo self._mod of 
-        self._value contains item. If item is not instance of 
-        int, then False.
-
-        Args:
-            item (int): value to check.
-
-        Return:
-            bool: If the residue class modulo self._mod of 
-                self._value contains item.
-        """
-        if isinstance(item, int):
-            return item % self._mod == self._value
-        return False
 
     def __str__(self) -> str:
         """
