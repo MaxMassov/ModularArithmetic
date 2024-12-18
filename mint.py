@@ -198,6 +198,11 @@ class mint:
         """
         return self.__class__(self._value + value.value, self._mod)  
 
+    def __iadd__(self, value):
+        """Implements += behaviour logic."""
+        self = self.__add__(value)
+        return self
+
     @_check_value
     def __radd__(self, value):
         """
@@ -217,6 +222,11 @@ class mint:
         """
         return self.__class__(self._value - value.value, self._mod)
     
+    def __isub__(self, value):
+        """Implements -= behaviour logic."""
+        self = self.__sub__(value)
+        return self
+
     @_check_value
     def __rsub__(self, value):
         """
@@ -240,6 +250,11 @@ class mint:
             return self.__class__(self._value * value, self._mod * value)
         return self.__class__(self._value * value.value, self._mod)  
     
+    def __imul__(self, value):
+        """Implements *= behaviour logic."""
+        self = self.__mul__(value)
+        return self
+
     def __rmul__(self, value):
         """
         Implements the multiplications of an integer|float|bool and a modular integer.
@@ -267,6 +282,11 @@ class mint:
             return self.__class__(pow(self._value, value, self._mod), self._mod)
         return self.__class__(pow(self._value, value.value, self._mod), self._mod)  
     
+    def __ipow__(self, value):
+        """Implements **= behaviour logic."""
+        self = self.__pow__(value)
+        return self
+
     @_check_value
     def __rpow__(self, value):
         """
@@ -286,6 +306,11 @@ class mint:
         """
         return self.__truediv__(value)
     
+    def __ifloordiv__(self, value):
+        """Implements //= behaviour logic."""
+        self = self.__floordiv__(value)
+        return self
+
     def __rfloordiv__(self, value):
         """
         The floor division of modular integer
@@ -315,6 +340,11 @@ class mint:
             raise ValueError(f"{self._value} is not divisible by {divider}.")
         return self.__class__(self._value // divider, self._mod // gcd(self._mod, divider))
     
+    def __itruediv__(self, value):
+        """Implements /= behaviour logic."""
+        self = self.__truediv__(value)
+        return self
+
     def __rtruediv__(self, value):
         """
         The division of mint|integer|float|bool
@@ -322,16 +352,21 @@ class mint:
         """
         return NotImplemented
     
-    def __mod__(self, value: int):
+    def __mod__(self, value):
         return NotImplemented
     
-    def __rmod__(self, value: int):
+    def __imod__(self, value):
+        """Implements %= behaviour logic."""
+        self = self.__mod__(value)
+        return self
+    
+    def __rmod__(self, value):
         return NotImplemented
     
-    def __divmod__(self, value: int, /) -> tuple:
+    def __divmod__(self, value) -> tuple:
         return NotImplemented
     
-    def __rdivmod__(self, value: int):
+    def __rdivmod__(self, value):
         return NotImplemented
     
     def __trunc__(self):
