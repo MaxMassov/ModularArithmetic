@@ -451,8 +451,8 @@ class mint:
             item (int): value to check.
 
         Return:
-            bool: If the residue class modulo self._mod of 
-                self._value contains item.
+            bool: True If the residue class modulo self._mod of 
+                self._value contains item which is instance of int.
         """
         if isinstance(item, int):
             return item % self._mod == self._value
