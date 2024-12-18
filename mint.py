@@ -385,22 +385,48 @@ class mint:
         return NotImplemented
     
     def __pos__(self):
-        return NotImplemented
+        """
+        Implements unary plus + behaviour.
+        
+        Returns:
+            mint: self.
+        """
+        return self
     
     def __trunc__(self):
-        """Returns trunced value."""
+        """
+        Returns trunced value.
+        
+        Returns:
+            mint: self.
+        """
         return self
     
     def __ceil__(self):
-        """Returns ceiled value."""
+        """
+        Returns ceiled value.
+        
+        Returns:
+            mint: self.
+        """
         return self
     
     def __floor__(self):
-        """Returns floored value."""
+        """
+        Returns floored value.
+        
+        Returns:
+            mint: self.
+        """
         return self
     
     def __round__(self, ndigits: int = None):
-        """Returns rounded value."""
+        """
+        Returns rounded value.
+        
+        Returns:
+            mint: self.
+        """
         return self
 
     def __getnewargs__(self) -> tuple:
@@ -530,11 +556,31 @@ class mint:
         """
         Converts modular integer to bool
         (mint -> int -> bool)
+
+        Returns:
+            bool: converted modular integer value.
         """
         return bool(self.__int__())
     
     def __index__(self) -> int:
         return NotImplemented
+    
+    def __contains__(self, item: int) -> bool:
+        """
+        Check if the residue class modulo self._mod of 
+        self._value contains item. If item is not instance of 
+        int, then False.
+
+        Args:
+            item (int): value to check.
+
+        Return:
+            bool: If the residue class modulo self._mod of 
+                self._value contains item.
+        """
+        if isinstance(item, int):
+            return item % self._mod == self._value
+        return False
 
     def __str__(self) -> str:
         """
