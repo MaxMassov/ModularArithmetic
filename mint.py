@@ -388,14 +388,20 @@ class mint:
         return NotImplemented
     
     def __trunc__(self):
-        return NotImplemented
+        """Returns trunced value."""
+        return self
     
     def __ceil__(self):
-        return NotImplemented
+        """Returns ceiled value."""
+        return self
     
     def __floor__(self):
-        return NotImplemented
-    #def __round__(self, ndigits: SupportsIndex = ..., /) -> int: ...
+        """Returns floored value."""
+        return self
+    
+    def __round__(self, ndigits: int = None):
+        """Returns rounded value."""
+        return self
 
     def __getnewargs__(self) -> tuple:
         return NotImplemented
@@ -514,13 +520,18 @@ class mint:
         return int(str(self._value), base)
     
     def __abs__(self):
-        return NotImplemented
+        """Returns absolute value (self)."""
+        return self
     
     def __hash__(self) -> int: 
         return NotImplemented
     
     def __bool__(self) -> bool:
-        return NotImplemented
+        """
+        Converts modular integer to bool
+        (mint -> int -> bool)
+        """
+        return bool(self.__int__())
     
     def __index__(self) -> int:
         return NotImplemented
