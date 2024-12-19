@@ -154,7 +154,7 @@ class mint:
                     but int to mint conversion disabled, 
                     and the value is not being used as an argument of the 
                     following methods: __mul__, __rmul__, __pow__, __floordiv__, 
-                    __truediv__, __rfloordiv__, __rtruediv__
+                    __truediv__, __rfloordiv__, __rtruediv__, __lshift__.
             """
             value = None
             if len(args) == 1:
@@ -179,7 +179,8 @@ class mint:
             if isinstance(value, int):
                 if method.__name__ in ["__mul__", "__rmul__", "__pow__", 
                                        "__floordiv__", "__truediv__",
-                                       "__rfloordiv__", "__rtruediv__"]:
+                                       "__rfloordiv__", "__rtruediv__", 
+                                       "__lshift__"]:
                     return method(self, value)
                 if mint._DISABLE_INT2MINT_CONVERSION:
                     raise TypeError(f"""Int to modular int conversion was disabled, 
@@ -194,7 +195,7 @@ class mint:
         Implements the addition of 2 modular integers or 
         a modular integer and an integer|float|bool.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         return self.__class__(self._value + value.value, self._mod)  
 
@@ -208,7 +209,7 @@ class mint:
         """
         Implements the addition of an integer|float|bool and a modular integer.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         return self.__class__(value.value + self._value, self._mod)
 
@@ -218,7 +219,7 @@ class mint:
         Implements the subtraction of of 2 modular integers or 
         a modular integer and an integer|float|bool.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         return self.__class__(self._value - value.value, self._mod)
     
@@ -232,7 +233,7 @@ class mint:
         """
         Implements the subtraction of an integer|float|bool and a modular integer.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         return self.__class__(value.value - self._value, self._mod)
 
@@ -242,7 +243,7 @@ class mint:
         Implements the multiplication of 2 modular integers or 
         a modular integer and an integer|float|bool.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         if isinstance(value, int):
             if value == 0:
@@ -259,7 +260,7 @@ class mint:
         """
         Implements the multiplications of an integer|float|bool and a modular integer.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         return self.__mul__(value)  
     
@@ -273,7 +274,7 @@ class mint:
             ValueError: When the value is less than 0 and modular integer
                 is not invertable.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         if isinstance(value, int):
             if value < 0 and self._gcd != 1:
@@ -293,7 +294,7 @@ class mint:
         Implements the raising integer|float|bool 
         to the power of mint.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         return self.__class__(pow(value.value, self._value, self._mod), self._mod)  
 
@@ -329,7 +330,7 @@ class mint:
             ZeroDivisionError: If divider is equal to 0.
             ValueError: If mint value is not divisible by a divider.
 
-        See __check_value decorator
+        See _check_value decorator
         """
         divider = value if isinstance(value, int) else value.value
         if divider < 0:
@@ -443,34 +444,70 @@ class mint:
         """
         return self.__class__(~self._value, self._mod)
     
-    def __and__(self, value: int):
+    def __and__(self, value):
         return NotImplemented
     
-    def __or__(self, value: int):
+    def __iand__(self, value):
         return NotImplemented
     
-    def __xor__(self, value: int):
+    def __rand__(self, value):
+        return NotImplemented
+    
+    def __or__(self, value):
+        return NotImplemented
+    
+    def __ior__(self, value):
+        return NotImplemented
+    
+    def __ror__(self, value):
+        return NotImplemented
+    
+    def __xor__(self, value):
+        return NotImplemented
+    
+    def __ixor__(self, value):
+        return NotImplemented
+    
+    def __rxor__(self, value):
         return NotImplemented
 
-    def __lshift__(self, value: int):
+    @_check_value
+    def __lshift__(self, value):
+        """
+        Implements bitwise left shift operation for
+        2 modular integers or a modular integer and an 
+        integer|float|bool.
+
+        Returns:
+            mint: A new instance of the modular integer
+                which is equal to self shifted left by value.
+
+        Raises:
+            ValueError: If shift value is negative.
+
+        See _check_value decorator
+        """ 
+        if isinstance(value, int):
+            if value < 0:
+                raise ValueError("Shift value must be positive.")
+            return self.__class__(self._value << value, self._mod << value)
+        return self.__class__(self._value << value.value, self._mod)
+    
+    def __ilshift__(self, value):
+        """Impelents <<= behaviour logic."""
+        self = self.__lshift__(value)
+        return self
+    
+    def __rlshift__(self, value):
         return NotImplemented
     
-    def __rshift__(self, value: int):
+    def __rshift__(self, value):
         return NotImplemented
     
-    def __rand__(self, value: int):
+    def __irshift__(self, value):
         return NotImplemented
     
-    def __ror__(self, value: int):
-        return NotImplemented
-    
-    def __rxor__(self, value: int):
-        return NotImplemented
-    
-    def __rlshift__(self, value: int):
-        return NotImplemented
-    
-    def __rrshift__(self, value: int):
+    def __rrshift__(self, value):
         return NotImplemented
     
     def __getnewargs__(self) -> tuple:
