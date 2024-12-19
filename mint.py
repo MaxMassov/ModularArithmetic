@@ -17,12 +17,12 @@ class mint:
     these operations are undefined, False -- defined. Defaults to False.
     """
 
-    def __init__(self, value: int, mod: int):
+    def __init__(self, value: int|float|bool, mod: int):
         """
         Initializes a mint instance.
 
         Args:
-            value (int): The integer number's value.
+            value (int|float|bool): The integer number's value.
             mod (int): The modulus of the system. Must be an integer 
                 greater than 1.
 
@@ -34,8 +34,10 @@ class mint:
                 or if `modulus` is less than 2.
         """
         # checking args values
+        if isinstance(value, float) or isinstance(value, bool):
+            value = int(value)
         if not isinstance(value, int):
-            raise ValueError("Value must be integer")
+            raise ValueError("Value must be integer, float or bool")
         
         if not isinstance(mod, int):
             raise ValueError("Modulus must be int and not less than 2")
@@ -172,9 +174,7 @@ class mint:
                                 them to a common modulus."""
                         )
                 return method(self, value)
-            if isinstance(value, float):
-                value = int(value)
-            elif isinstance(value, bool):
+            if isinstance(value, float) or isinstance(value, bool):
                 value = int(value)
             if isinstance(value, int):
                 if method.__name__ in ["__mul__", "__rmul__", "__pow__", 
