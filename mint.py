@@ -24,9 +24,6 @@ class mint:
             mod (int|float): The modulus of the system. Must be an integer 
                 greater than 1.
 
-        Returns:
-            mint: A new instance of the modular integer.
-
         Raises:
             ValueError: If either `value` or `modulus` is not an integer, 
                 or if `modulus` is less than 2.
