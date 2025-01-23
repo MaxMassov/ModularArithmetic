@@ -5,7 +5,6 @@ import re
 from math import gcd
 
 class mint:
-
     """Represents an integer number from the specified modular system."""
 
     __slots__ = ("_value", "_mod", "_gcd")
@@ -22,7 +21,7 @@ class mint:
 
         Args:
             value (int|float|bool): The integer number's value.
-            mod (int): The modulus of the system. Must be an integer 
+            mod (int|float): The modulus of the system. Must be an integer 
                 greater than 1.
 
         Returns:
@@ -96,8 +95,7 @@ class mint:
         """
         if not isinstance(value, (int, bool)) or value not in (0, 1):
             raise ValueError("mint._DISABLE_INT2MINT_CONVERSION must be bool.")
-        cls._DISABLE_INT2MINT_CONVERSION = not bool(value)
-              
+        cls._DISABLE_INT2MINT_CONVERSION = not bool(value)             
 
     @classmethod
     def change_int2mint(cls):
