@@ -10,14 +10,13 @@ class mint:
 
     __slots__ = ("_value", "_mod", "_gcd")
 
-    #ToDo: property func or setter
     _DISABLE_INT2MINT_CONVERSION = False
     """
     Flag that defines behaviour of operations between int and mint. True means 
     these operations are undefined, False -- defined. Defaults to False.
     """
 
-    def __init__(self, value: int|float|bool, mod: int):
+    def __init__(self, value: int|float|bool, mod: int|float) -> None:
         """
         Initializes a mint instance.
 
@@ -34,13 +33,13 @@ class mint:
                 or if `modulus` is less than 2.
         """
         # checking args values
-        if isinstance(value, float) or isinstance(value, bool):
-            value = int(value)
-        if not isinstance(value, int):
-            raise ValueError("Value must be integer, float or bool")
+        if not isinstance(value, (float, bool, int)):
+            raise TypeError("Value must be integer, float or bool")
+        value = int(value)
         
-        if not isinstance(mod, int):
-            raise ValueError("Modulus must be int and not less than 2")
+        if not isinstance(mod, (int, float)):
+            raise TypeError("Modulus must be int and not less than 2")
+        mod = int(mod)
         
         if mod <= 1:
             raise ValueError("Modulus must be at least 2")
@@ -95,12 +94,10 @@ class mint:
         Raises:
             ValueError: If value has not a relevant value.
         """
-        if isinstance(value, int) and (value == 1 or value == 0):
-            value = bool(value)
-        if isinstance(value, bool):
-            cls._DISABLE_INT2MINT_CONVERSION = not value
-        else:
-            raise ValueError("mint._DISABLE_INT2MINT_CONVERSION must be bool.")  
+        if not isinstance(value, (int, bool)) or value not in (0, 1):
+            raise ValueError("mint._DISABLE_INT2MINT_CONVERSION must be bool.")
+        cls._DISABLE_INT2MINT_CONVERSION = not bool(value)
+              
 
     @classmethod
     def change_int2mint(cls):
