@@ -25,8 +25,8 @@ class mint:
                 greater than 1.
 
         Raises:
-            ValueError: If either `value` or `modulus` is not an integer, 
-                or if `modulus` is less than 2.
+            TypeError: If either `value` or `modulus` is not an integer|float|bool. 
+            ValueError: if `modulus` is less than 2.
         """
         # checking args values
         if not isinstance(value, (float, bool, int)):
@@ -90,7 +90,7 @@ class mint:
         Raises:
             ValueError: If value has not a relevant value.
         """
-        if not isinstance(value, (int, bool)) or value not in (0, 1):
+        if not isinstance(value, (int, bool)) or value not in (True, False, 0, 1):
             raise ValueError("mint._DISABLE_INT2MINT_CONVERSION must be bool.")
         cls._DISABLE_INT2MINT_CONVERSION = not bool(value)             
 
