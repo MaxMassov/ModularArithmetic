@@ -95,3 +95,68 @@ cdef class np_mint:
         global _DISABLE_INT2MINT_CONVERSION
         _DISABLE_INT2MINT_CONVERSION = True
 
+    @staticmethod
+    def _check_value(method: Callable):
+        """
+        Decorator that checks if the method called with a relevant value.
+
+        Args:
+            method (function): A np_mint method between two values.
+
+        Returns:
+            wrapper (function): A function that checks if the method called 
+                with a relevant value.
+        """
+        @wraps(method)
+        def wrapper(self, *args, **kwargs):
+            """
+            Function that checks if the method called with a relevant value.
+
+            Args:
+                value (np_mint|int|float|bool): the value to which the method will be applied.
+
+            Returns:
+                np_mint: A new instance of the modular integer
+                    which is equal to result of applying
+                    method to self value and given value.
+
+            Raises:
+                TypeError: If more or less than one arrgument is given.
+                ValueError: If the given np_mint value is not from the same
+                    modular system as self.
+                TypeError: If the value is instance of int|float|bool,
+                    but int to np_mint conversion disabled, 
+                    and the value is not being used as an argument of the 
+                    following methods: __mul__, __rmul__, __pow__, __floordiv__, 
+                    __truediv__, __rfloordiv__, __rtruediv__, __lshift__.
+            """
+            value = None
+            if len(args) == 1:
+                value = args[0]
+            elif len(kwargs) == 1:
+                value = kwargs.values()[0]
+            if value is None:
+                raise TypeError(f"""Method {method.__name__}() takes one argument 
+                                ({len(args) + len(kwargs)} given).""")
+            if isinstance(value, np_mint):
+                if self.mod != value.mod:
+                    raise ValueError(
+                            """You cannot directly operate on numbers from 
+                                different modular systems without first aligning 
+                                them to a common modulus."""
+                        )
+                return method(self, value)
+            if isinstance(value, (float, bool)):
+                value = int(value)
+            if isinstance(value, (int, np.integer)):
+                if method.__name__ in ["__mul__", "__rmul__", "__pow__", 
+                                       "__floordiv__", "__truediv__",
+                                       "__rfloordiv__", "__rtruediv__", 
+                                       "__lshift__"]:
+                    return method(self, value)
+                if _DISABLE_INT2MINT_CONVERSION:
+                    raise TypeError(f"""Int to modular int conversion was disabled, 
+                                    so the {method.__name__}() cannot be done.""")
+                return method(self, self.__class__(value, self.mod))
+            return NotImplemented
+        return wrapper

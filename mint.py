@@ -153,11 +153,11 @@ class mint:
             value = None
             if len(args) == 1:
                 value = args[0]
-            elif len(kwargs.values()) == 1:
+            elif len(kwargs) == 1:
                 value = kwargs.values()[0]
             if value is None:
                 raise TypeError(f"""Method {method.__name__}() takes one argument 
-                                ({len(args) + len(kwargs.values())} given).""")
+                                ({len(args) + len(kwargs)} given).""")
             if isinstance(value, mint):
                 if self._mod != value.mod:
                     raise ValueError(
@@ -166,7 +166,7 @@ class mint:
                                 them to a common modulus."""
                         )
                 return method(self, value)
-            if isinstance(value, float) or isinstance(value, bool):
+            if isinstance(value, (float, bool)):
                 value = int(value)
             if isinstance(value, int):
                 if method.__name__ in ["__mul__", "__rmul__", "__pow__", 
