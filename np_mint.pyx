@@ -13,7 +13,7 @@ import re
 INT_DTYPE = np.int64
 ctypedef cnp.int64_t INT_t
 
-cdef long long gcd(long long a, long long b):
+cdef inline INT_t gcd(INT_t a, INT_t b):
     while b != 0:
         a, b = b, a % b
     return a
@@ -55,7 +55,7 @@ cdef class np_mint:
         return not _DISABLE_INT2MINT_CONVERSION
 
     @classmethod
-    def set_int2mint(cls, value):
+    def set_int2mint(cls, value: bool):
         """
         Set np_mint._DISABLE_INT2MINT_CONVERSION to the opposite of `value`
         
@@ -94,3 +94,4 @@ cdef class np_mint:
         """
         global _DISABLE_INT2MINT_CONVERSION
         _DISABLE_INT2MINT_CONVERSION = True
+

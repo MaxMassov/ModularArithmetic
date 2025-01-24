@@ -1709,7 +1709,7 @@ typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
  * INT_DTYPE = np.int64
  * ctypedef cnp.int64_t INT_t             # <<<<<<<<<<<<<<
  * 
- * cdef long long gcd(long long a, long long b):
+ * cdef inline INT_t gcd(INT_t a, INT_t b):
  */
 typedef __pyx_t_5numpy_int64_t __pyx_t_7np_mint_INT_t;
 /* #### Code section: complex_type_declarations ### */
@@ -1967,8 +1967,8 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
 
-/* ModInt[PY_LONG_LONG].proto */
-static CYTHON_INLINE PY_LONG_LONG __Pyx_mod_PY_LONG_LONG(PY_LONG_LONG, PY_LONG_LONG);
+/* ModInt[__pyx_t_7np_mint_INT_t].proto */
+static CYTHON_INLINE __pyx_t_7np_mint_INT_t __Pyx_mod___pyx_t_7np_mint_INT_t(__pyx_t_7np_mint_INT_t, __pyx_t_7np_mint_INT_t);
 
 /* TupleAndListFromArray.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -2046,9 +2046,6 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject *const *kwvalues
     PyObject **argnames[],
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,
     const char* function_name);
-
-/* ModInt[__pyx_t_7np_mint_INT_t].proto */
-static CYTHON_INLINE __pyx_t_7np_mint_INT_t __Pyx_mod___pyx_t_7np_mint_INT_t(__pyx_t_7np_mint_INT_t, __pyx_t_7np_mint_INT_t);
 
 /* PyDictVersioning.proto */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
@@ -2647,7 +2644,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void); /*proto*/
 
 /* Module declarations from "np_mint" */
 static int __pyx_v_7np_mint__DISABLE_INT2MINT_CONVERSION;
-static PY_LONG_LONG __pyx_f_7np_mint_gcd(PY_LONG_LONG, PY_LONG_LONG); /*proto*/
+static CYTHON_INLINE __pyx_t_7np_mint_INT_t __pyx_f_7np_mint_gcd(__pyx_t_7np_mint_INT_t, __pyx_t_7np_mint_INT_t); /*proto*/
 /* #### Code section: typeinfo ### */
 /* #### Code section: before_global_var ### */
 #define __Pyx_MODULE_NAME "np_mint"
@@ -2668,6 +2665,7 @@ static const char __pyx_k_re[] = "re";
 static const char __pyx_k__17[] = "?";
 static const char __pyx_k_cls[] = "cls";
 static const char __pyx_k_mod[] = "mod";
+static const char __pyx_k_bool[] = "bool";
 static const char __pyx_k_dict[] = "__dict__";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
@@ -2814,6 +2812,7 @@ typedef struct {
   PyObject *__pyx_kp_u__6;
   PyObject *__pyx_n_s_activate_int2mint;
   PyObject *__pyx_n_s_asyncio_coroutines;
+  PyObject *__pyx_n_s_bool;
   PyObject *__pyx_n_s_change_int2mint;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_n_s_cls;
@@ -2951,6 +2950,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_u__6);
   Py_CLEAR(clear_module_state->__pyx_n_s_activate_int2mint);
   Py_CLEAR(clear_module_state->__pyx_n_s_asyncio_coroutines);
+  Py_CLEAR(clear_module_state->__pyx_n_s_bool);
   Py_CLEAR(clear_module_state->__pyx_n_s_change_int2mint);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_n_s_cls);
@@ -3066,6 +3066,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_u__6);
   Py_VISIT(traverse_module_state->__pyx_n_s_activate_int2mint);
   Py_VISIT(traverse_module_state->__pyx_n_s_asyncio_coroutines);
+  Py_VISIT(traverse_module_state->__pyx_n_s_bool);
   Py_VISIT(traverse_module_state->__pyx_n_s_change_int2mint);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_n_s_cls);
@@ -3211,6 +3212,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_u__6 __pyx_mstate_global->__pyx_kp_u__6
 #define __pyx_n_s_activate_int2mint __pyx_mstate_global->__pyx_n_s_activate_int2mint
 #define __pyx_n_s_asyncio_coroutines __pyx_mstate_global->__pyx_n_s_asyncio_coroutines
+#define __pyx_n_s_bool __pyx_mstate_global->__pyx_n_s_bool
 #define __pyx_n_s_change_int2mint __pyx_mstate_global->__pyx_n_s_change_int2mint
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_n_s_cls __pyx_mstate_global->__pyx_n_s_cls
@@ -4971,23 +4973,23 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
 /* "np_mint.pyx":16
  * ctypedef cnp.int64_t INT_t
  * 
- * cdef long long gcd(long long a, long long b):             # <<<<<<<<<<<<<<
+ * cdef inline INT_t gcd(INT_t a, INT_t b):             # <<<<<<<<<<<<<<
  *     while b != 0:
  *         a, b = b, a % b
  */
 
-static PY_LONG_LONG __pyx_f_7np_mint_gcd(PY_LONG_LONG __pyx_v_a, PY_LONG_LONG __pyx_v_b) {
-  PY_LONG_LONG __pyx_r;
+static CYTHON_INLINE __pyx_t_7np_mint_INT_t __pyx_f_7np_mint_gcd(__pyx_t_7np_mint_INT_t __pyx_v_a, __pyx_t_7np_mint_INT_t __pyx_v_b) {
+  __pyx_t_7np_mint_INT_t __pyx_r;
   int __pyx_t_1;
-  PY_LONG_LONG __pyx_t_2;
-  PY_LONG_LONG __pyx_t_3;
+  __pyx_t_7np_mint_INT_t __pyx_t_2;
+  __pyx_t_7np_mint_INT_t __pyx_t_3;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
   /* "np_mint.pyx":17
  * 
- * cdef long long gcd(long long a, long long b):
+ * cdef inline INT_t gcd(INT_t a, INT_t b):
  *     while b != 0:             # <<<<<<<<<<<<<<
  *         a, b = b, a % b
  *     return a
@@ -4997,7 +4999,7 @@ static PY_LONG_LONG __pyx_f_7np_mint_gcd(PY_LONG_LONG __pyx_v_a, PY_LONG_LONG __
     if (!__pyx_t_1) break;
 
     /* "np_mint.pyx":18
- * cdef long long gcd(long long a, long long b):
+ * cdef inline INT_t gcd(INT_t a, INT_t b):
  *     while b != 0:
  *         a, b = b, a % b             # <<<<<<<<<<<<<<
  *     return a
@@ -5008,7 +5010,7 @@ static PY_LONG_LONG __pyx_f_7np_mint_gcd(PY_LONG_LONG __pyx_v_a, PY_LONG_LONG __
       PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
       __PYX_ERR(0, 18, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_mod_PY_LONG_LONG(__pyx_v_a, __pyx_v_b);
+    __pyx_t_3 = __Pyx_mod___pyx_t_7np_mint_INT_t(__pyx_v_a, __pyx_v_b);
     __pyx_v_a = __pyx_t_2;
     __pyx_v_b = __pyx_t_3;
   }
@@ -5026,7 +5028,7 @@ static PY_LONG_LONG __pyx_f_7np_mint_gcd(PY_LONG_LONG __pyx_v_a, PY_LONG_LONG __
   /* "np_mint.pyx":16
  * ctypedef cnp.int64_t INT_t
  * 
- * cdef long long gcd(long long a, long long b):             # <<<<<<<<<<<<<<
+ * cdef inline INT_t gcd(INT_t a, INT_t b):             # <<<<<<<<<<<<<<
  *     while b != 0:
  *         a, b = b, a % b
  */
@@ -5146,7 +5148,7 @@ static int __pyx_pf_7np_mint_7np_mint___cinit__(struct __pyx_obj_7np_mint_np_min
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
-  PY_LONG_LONG __pyx_t_3;
+  __pyx_t_7np_mint_INT_t __pyx_t_3;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
   PyObject *__pyx_t_6 = NULL;
@@ -5217,7 +5219,7 @@ static int __pyx_pf_7np_mint_7np_mint___cinit__(struct __pyx_obj_7np_mint_np_min
  *         self.dtype = np.dtype(INT_DTYPE)
  * 
  */
-  __pyx_t_3 = __pyx_f_7np_mint_gcd(llabs(__pyx_v_self->value), __pyx_v_self->mod); if (unlikely(__pyx_t_3 == ((PY_LONG_LONG)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_3 = __pyx_f_7np_mint_gcd(llabs(__pyx_v_self->value), __pyx_v_self->mod); if (unlikely(__pyx_t_3 == ((__pyx_t_7np_mint_INT_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L1_error)
   __pyx_v_self->vm_gcd = __pyx_t_3;
 
   /* "np_mint.pyx":50
@@ -5356,7 +5358,7 @@ static PyObject *__pyx_pf_7np_mint_7np_mint_8int2mint___get__(CYTHON_UNUSED stru
  *         return not _DISABLE_INT2MINT_CONVERSION
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
- *     def set_int2mint(cls, value):
+ *     def set_int2mint(cls, value: bool):
  *         """
  */
 
@@ -5577,7 +5579,7 @@ static PyObject *__pyx_pf_7np_mint_7np_mint_2set_int2mint(CYTHON_UNUSED PyTypeOb
  *         return not _DISABLE_INT2MINT_CONVERSION
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
- *     def set_int2mint(cls, value):
+ *     def set_int2mint(cls, value: bool):
  *         """
  */
 
@@ -5600,7 +5602,7 @@ static PyObject *__pyx_pf_7np_mint_7np_mint_2set_int2mint(CYTHON_UNUSED PyTypeOb
  *         _DISABLE_INT2MINT_CONVERSION = not bool(value)
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
- *     def  change_int2mint(cls):
+ *     def change_int2mint(cls):
  *         """
  */
 
@@ -5664,7 +5666,7 @@ static PyObject *__pyx_pf_7np_mint_7np_mint_4change_int2mint(CYTHON_UNUSED PyTyp
  *         _DISABLE_INT2MINT_CONVERSION = not bool(value)
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
- *     def  change_int2mint(cls):
+ *     def change_int2mint(cls):
  *         """
  */
 
@@ -5813,6 +5815,7 @@ static PyObject *__pyx_pf_7np_mint_7np_mint_8disable_int2mint(CYTHON_UNUSED PyTy
  *         """
  *         global _DISABLE_INT2MINT_CONVERSION
  *         _DISABLE_INT2MINT_CONVERSION = True             # <<<<<<<<<<<<<<
+ * 
  */
   __pyx_v_7np_mint__DISABLE_INT2MINT_CONVERSION = 1;
 
@@ -6464,6 +6467,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_kp_u__6, __pyx_k__6, sizeof(__pyx_k__6), 0, 1, 0, 0},
     {&__pyx_n_s_activate_int2mint, __pyx_k_activate_int2mint, sizeof(__pyx_k_activate_int2mint), 0, 0, 1, 1},
     {&__pyx_n_s_asyncio_coroutines, __pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 0, 1, 1},
+    {&__pyx_n_s_bool, __pyx_k_bool, sizeof(__pyx_k_bool), 0, 0, 1, 1},
     {&__pyx_n_s_change_int2mint, __pyx_k_change_int2mint, sizeof(__pyx_k_change_int2mint), 0, 0, 1, 1},
     {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
     {&__pyx_n_s_cls, __pyx_k_cls, sizeof(__pyx_k_cls), 0, 0, 1, 1},
@@ -6580,7 +6584,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         return not _DISABLE_INT2MINT_CONVERSION
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
- *     def set_int2mint(cls, value):
+ *     def set_int2mint(cls, value: bool):
  *         """
  */
   __pyx_tuple__7 = PyTuple_Pack(2, __pyx_n_s_cls, __pyx_n_s_value); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 57, __pyx_L1_error)
@@ -6592,7 +6596,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         _DISABLE_INT2MINT_CONVERSION = not bool(value)
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
- *     def  change_int2mint(cls):
+ *     def change_int2mint(cls):
  *         """
  */
   __pyx_tuple__9 = PyTuple_Pack(1, __pyx_n_s_cls); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 74, __pyx_L1_error)
@@ -7187,42 +7191,47 @@ if (!__Pyx_RefNanny) {
  *         return not _DISABLE_INT2MINT_CONVERSION
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
- *     def set_int2mint(cls, value):
+ *     def set_int2mint(cls, value: bool):
  *         """
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_3set_int2mint, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint_set_int2mint, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_set_int2mint, __pyx_t_4) < 0) __PYX_ERR(0, 57, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_7np_mint_np_mint);
-  __Pyx_GetNameInClass(__pyx_t_4, (PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_set_int2mint); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 57, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_Method_ClassMethod(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 57, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_value, __pyx_n_s_bool) < 0) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_3set_int2mint, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint_set_int2mint, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_4);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_set_int2mint, __pyx_t_3) < 0) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  PyType_Modified(__pyx_ptype_7np_mint_np_mint);
+  __Pyx_GetNameInClass(__pyx_t_3, (PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_set_int2mint); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_Method_ClassMethod(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_set_int2mint, __pyx_t_4) < 0) __PYX_ERR(0, 57, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   PyType_Modified(__pyx_ptype_7np_mint_np_mint);
 
   /* "np_mint.pyx":74
  *         _DISABLE_INT2MINT_CONVERSION = not bool(value)
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
- *     def  change_int2mint(cls):
+ *     def change_int2mint(cls):
  *         """
  */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_5change_int2mint, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint_change_int2mint, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_change_int2mint, __pyx_t_3) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  PyType_Modified(__pyx_ptype_7np_mint_np_mint);
-  __Pyx_GetNameInClass(__pyx_t_3, (PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_change_int2mint); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_Method_ClassMethod(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_5change_int2mint, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint_change_int2mint, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_change_int2mint, __pyx_t_4) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  PyType_Modified(__pyx_ptype_7np_mint_np_mint);
+  __Pyx_GetNameInClass(__pyx_t_4, (PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_change_int2mint); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = __Pyx_Method_ClassMethod(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_change_int2mint, __pyx_t_3) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   PyType_Modified(__pyx_ptype_7np_mint_np_mint);
 
   /* "np_mint.pyx":82
@@ -7232,18 +7241,18 @@ if (!__Pyx_RefNanny) {
  *     def activate_int2mint(cls):
  *         """
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_7activate_int2mint, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint_activate_int2mint, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_activate_int2mint, __pyx_t_4) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  PyType_Modified(__pyx_ptype_7np_mint_np_mint);
-  __Pyx_GetNameInClass(__pyx_t_4, (PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_activate_int2mint); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_Method_ClassMethod(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_7activate_int2mint, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint_activate_int2mint, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_activate_int2mint, __pyx_t_3) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  PyType_Modified(__pyx_ptype_7np_mint_np_mint);
+  __Pyx_GetNameInClass(__pyx_t_3, (PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_activate_int2mint); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_Method_ClassMethod(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_activate_int2mint, __pyx_t_4) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   PyType_Modified(__pyx_ptype_7np_mint_np_mint);
 
   /* "np_mint.pyx":90
@@ -7253,18 +7262,18 @@ if (!__Pyx_RefNanny) {
  *     def disable_int2mint(cls):
  *         """
  */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_9disable_int2mint, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint_disable_int2mint, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 90, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_disable_int2mint, __pyx_t_3) < 0) __PYX_ERR(0, 90, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  PyType_Modified(__pyx_ptype_7np_mint_np_mint);
-  __Pyx_GetNameInClass(__pyx_t_3, (PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_disable_int2mint); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 90, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_Method_ClassMethod(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_9disable_int2mint, __Pyx_CYFUNCTION_CLASSMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint_disable_int2mint, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_disable_int2mint, __pyx_t_4) < 0) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  PyType_Modified(__pyx_ptype_7np_mint_np_mint);
+  __Pyx_GetNameInClass(__pyx_t_4, (PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_disable_int2mint); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = __Pyx_Method_ClassMethod(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_7np_mint_np_mint, __pyx_n_s_disable_int2mint, __pyx_t_3) < 0) __PYX_ERR(0, 90, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   PyType_Modified(__pyx_ptype_7np_mint_np_mint);
 
   /* "(tree fragment)":1
@@ -7272,10 +7281,10 @@ if (!__Pyx_RefNanny) {
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  * def __setstate_cython__(self, __pyx_state):
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_11__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint___reduce_cython, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_reduce_cython, __pyx_t_4) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_11__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint___reduce_cython, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_reduce_cython, __pyx_t_3) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "(tree fragment)":3
  * def __reduce_cython__(self):
@@ -7283,20 +7292,20 @@ if (!__Pyx_RefNanny) {
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_13__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint___setstate_cython, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_4) < 0) __PYX_ERR(1, 3, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7np_mint_7np_mint_13__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_np_mint___setstate_cython, NULL, __pyx_n_s_np_mint, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_3) < 0) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "np_mint.pyx":1
  * # -*- coding: utf-8 -*-             # <<<<<<<<<<<<<<
  * # cython: language_level=3, boundscheck=False, wraparound=False
  * 
  */
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_4) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /*--- Wrapped vars code ---*/
 
@@ -7889,9 +7898,9 @@ bad:
 }
 #endif
 
-/* ModInt[PY_LONG_LONG] */
-static CYTHON_INLINE PY_LONG_LONG __Pyx_mod_PY_LONG_LONG(PY_LONG_LONG a, PY_LONG_LONG b) {
-    PY_LONG_LONG r = a % b;
+/* ModInt[__pyx_t_7np_mint_INT_t] */
+static CYTHON_INLINE __pyx_t_7np_mint_INT_t __Pyx_mod___pyx_t_7np_mint_INT_t(__pyx_t_7np_mint_INT_t a, __pyx_t_7np_mint_INT_t b) {
+    __pyx_t_7np_mint_INT_t r = a % b;
     r += ((r != 0) & ((r ^ b) < 0)) * b;
     return r;
 }
@@ -8315,13 +8324,6 @@ bad:
     Py_XDECREF(key);
     Py_XDECREF(value);
     return -1;
-}
-
-/* ModInt[__pyx_t_7np_mint_INT_t] */
-static CYTHON_INLINE __pyx_t_7np_mint_INT_t __Pyx_mod___pyx_t_7np_mint_INT_t(__pyx_t_7np_mint_INT_t a, __pyx_t_7np_mint_INT_t b) {
-    __pyx_t_7np_mint_INT_t r = a % b;
-    r += ((r != 0) & ((r ^ b) < 0)) * b;
-    return r;
 }
 
 /* PyDictVersioning */
