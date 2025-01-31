@@ -436,3 +436,75 @@ cdef class np_mint:
         if isinstance(value, (int, np.integer)):
             return self.value == value % self.mod and not _DISABLE_INT2MINT_CONVERSION
         return False
+
+    def __ne__(self, value: object) -> bool:
+        """
+        Implements the logic of unequality.
+
+        Args:
+            value (object): value to compare.
+
+        Returns:
+            bool: inverted value of __eq__ method.
+        """
+        return not self.__eq__(value)
+    
+    def __lt__(self, value) -> bool:
+        """
+        Implements the logic of comparasion (less).
+
+        Args:
+            value (np_mint|np.integer|int|bool|float): value to compare.
+
+        Returns:
+            bool: If self is less than the value.
+        """
+        processed_value = self._preprocess_value("__lt__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        return self.value < processed_value.value
+    
+    def __le__(self, value) -> bool:
+        """
+        Implements the logic of comparasion (less or equal).
+
+        Args:
+            value (np_mint|np.integer|int|bool|float): value to compare.
+
+        Returns:
+            bool: If self is less than or equal to the value.
+        """
+        processed_value = self._preprocess_value("__le__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        return self.value <= processed_value.value
+    
+    def __gt__(self, value) -> bool:
+        """
+        Implements the logic of comparasion (greater).
+
+        Args:
+            value (np_mint|np.integer|int|bool|float): value to compare.
+
+        Returns:
+            bool: If self is greater than the value.
+        """
+        processed_value = self._preprocess_value("__gt__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        return self.value > processed_value.value
+    
+    def __ge__(self, value) -> bool:
+        """
+        Implements the logic of comparasion (greater or equal).
+
+        Args:
+            value (np_mint|np.integer|int|bool|float): value to compare.
+
+        Returns:
+            bool: If self is greater than equal to the value.
+        """
+        processed_value = self._preprocess_value("__ge__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        return self.value >= processed_value.value
