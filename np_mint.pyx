@@ -296,3 +296,67 @@ cdef class np_mint:
         by modular integer is not defined.
         """
         return NotImplemented
+
+    def __trunc__(self):
+        """
+        Returns trunced value.
+        
+        Returns:
+            np_mint: self.
+        """
+        return self
+    
+    def __ceil__(self):
+        """
+        Returns ceiled value.
+        
+        Returns:
+            np_mint: self.
+        """
+        return self
+    
+    def __floor__(self):
+        """
+        Returns floored value.
+        
+        Returns:
+            np_mint: self.
+        """
+        return self
+    
+    def __round__(self, ndigits: int = None):
+        """
+        Returns rounded value.
+        
+        Returns:
+            np_mint: self.
+        """
+        return self
+
+    def __abs__(self):
+        """
+        Returns absolute value (self).
+        
+        Returns:
+            np_mint: self.
+        """
+        return self
+
+    def __eq__(self, value: object) -> bool:
+        """
+        Implements the logic of equality.
+
+        Args:
+            value (object): value to compare.
+
+        Returns:
+            bool: If the value is equal to self
+                (for np_mint -- equality of values and moduluses,
+                for int and np_mint to int is not disabled
+                -- equality of value mod modulus, otherwise -- false).
+        """
+        if isinstance(value, np_mint):
+            return self.value == value.value and self.mod == value.mod
+        if isinstance(value, (int, np.integer)):
+            return self.value == value % self.mod and not _DISABLE_INT2MINT_CONVERSION
+        return False
