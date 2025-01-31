@@ -156,7 +156,29 @@ cdef class np_mint:
     def __radd__(self, value):
         """
         Implements the addition of an integer|float|bool and a modular integer.
-
-        See _check_value decorator
         """
         return self.__add__(value)
+
+    def __sub__(self, value):
+        """
+        Implements the subtraction of of 2 modular integers or 
+        a modular integer and an integer|float|bool.
+        """
+        processed_value = self._preprocess_value("__add__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        return self.__class__(self.value - processed_value.value, self.mod)
+    
+    def __isub__(self, value):
+        """Implements -= behaviour logic."""
+        self = self.__sub__(value)
+        return self
+
+    def __rsub__(self, value):
+        """
+        Implements the subtraction of an integer|float|bool and a modular integer.
+        """
+        processed_value = self._preprocess_value("__add__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        return self.__class__(processed_value.value - self.value, self.mod)
