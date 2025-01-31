@@ -342,6 +342,35 @@ cdef class np_mint:
         """
         return self
 
+    def __pos__(self):
+        """
+        Implements unary plus + behaviour.
+        
+        Returns:
+            np_mint: self.
+        """
+        return self
+
+    def __neg__(self):
+        """
+        Implements unary minus - behaviour.
+        
+        Returns:
+            np_mint: A new instance of the modular integer
+                which is equal to -previous_value.
+        """
+        return self.__class__(-self.value, self.mod)
+
+    def __invert__(self):
+        """
+        Implements modular int inversion (~ operation).
+        
+        Returns:
+            np_mint: A new instance of the modular integer
+                which is equal to inverted previous value.
+        """
+        return self.__class__(~self.value, self.mod)
+
     def __eq__(self, value: object) -> bool:
         """
         Implements the logic of equality.
