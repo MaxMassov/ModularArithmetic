@@ -508,3 +508,52 @@ cdef class np_mint:
         if processed_value is NotImplemented:
             return NotImplemented
         return self.value >= processed_value.value
+
+    def __float__(self) -> float:
+        """
+        Converts modular int to float
+        
+        Returns:
+            float: modular int converted to float
+        """
+        return float(self.value)
+
+    def __int__(self) -> int:
+        """
+        Converts modular int to int
+        
+        Returns:
+            int: modular int converted to int
+        """
+        return self.value
+    
+    def to_int(self, base: int = 10):
+        """
+        Custom method supporting base conversion.
+        
+        Returns:
+            int: modular int with base `base` converted 
+                to int with base 10
+        """
+        if not (2 <= base <= 36):
+            raise ValueError("Base must be between 2 and 36.")
+        return int(str(self.value), base)
+    
+    def __bool__(self) -> bool:
+        """
+        Converts modular integer to bool
+        (np_mint -> int -> bool)
+
+        Returns:
+            bool: converted modular integer value.
+        """
+        return bool(self.__int__())
+    
+    def __str__(self) -> str:
+        """
+        Prints out a number without modulus (informal style).
+
+        Returns:
+            str: A number value converted to a string.
+        """
+        return f"{self.value}"
