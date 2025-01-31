@@ -371,6 +371,36 @@ cdef class np_mint:
         """
         return self.__class__(~self.value, self.mod)
 
+    def __lshift__(self, value):
+        """
+        Implements bitwise left shift operation for
+        2 modular integers or a modular integer and an 
+        integer|float|bool.
+
+        Returns:
+            np_mint: A new instance of the modular integer
+                which is equal to self shifted left by value.
+
+        Raises:
+            ValueError: If shift value is negative.
+        """
+        processed_value = self._preprocess_value("__lshift__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        if isinstance(processed_value, (int, np.integer)):
+            if processed_value < 0:
+                raise ValueError("Shift value must be positive.")
+            return self.__class__(self.value << processed_value, self.mod << processed_value)
+        return self.__class__(self.value << processed_value.value, self.mod)
+    
+    def __ilshift__(self, value):
+        """Impelents <<= behaviour logic."""
+        self = self.__lshift__(value)
+        return self
+    
+    def __rlshift__(self, value):
+        return NotImplemented
+
     def __eq__(self, value: object) -> bool:
         """
         Implements the logic of equality.
