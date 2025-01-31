@@ -207,3 +207,37 @@ cdef class np_mint:
         Implements the multiplications of an integer|float|bool and a modular integer.
         """
         return self.__mul__(value)
+
+    def __pow__(self, value):
+        """
+        Implements the raising modular integer to the power 
+        of np_mint|integer|float|bool.
+
+        Raises:
+            ValueError: When the value is less than 0 and modular integer
+                is not invertable.
+        """
+        processed_value = self._preprocess_value("__pow__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        if isinstance(processed_value, (int, np.integer)):
+            if processed_value < 0 and self.vm_gcd != 1:
+                raise ValueError(f"""base is not invertible for the given modulus 
+                                 (gcd({self.value}, {self.vm_gcd}) = {self.vm_gcd})""")
+            return self.__class__(pow(self.value, processed_value, self.mod), self.mod)
+        return self.__class__(pow(self.value, processed_value.value, self.mod), self.mod)  
+    
+    def __ipow__(self, value):
+        """Implements **= behaviour logic."""
+        self = self.__pow__(value)
+        return self
+
+    def __rpow__(self, value):
+        """
+        Implements the raising integer|float|bool 
+        to the power of np_mint.
+        """
+        processed_value = self._preprocess_value("__rpow__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        return self.__class__(pow(processed_value.value, self.value, self.mod), self.mod)
