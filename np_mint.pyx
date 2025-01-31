@@ -147,3 +147,16 @@ cdef class np_mint:
         if processed_value is NotImplemented:
             return NotImplemented
         return self.__class__(self.value + processed_value.value, self.mod)
+
+    def __iadd__(self, value):
+        """Implements += behaviour logic."""
+        self = self.__add__(value)
+        return self
+
+    def __radd__(self, value):
+        """
+        Implements the addition of an integer|float|bool and a modular integer.
+
+        See _check_value decorator
+        """
+        return self.__add__(value)
