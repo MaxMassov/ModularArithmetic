@@ -241,3 +241,58 @@ cdef class np_mint:
         if processed_value is NotImplemented:
             return NotImplemented
         return self.__class__(pow(processed_value.value, self.value, self.mod), self.mod)
+
+    def __floordiv__(self, value):
+        """
+        Implements the floor division of modular integer by 
+        np_mint|integer|float|bool.
+
+        See __truediv__ method
+        """
+        return self.__truediv__(value)
+    
+    def __ifloordiv__(self, value):
+        """Implements //= behaviour logic."""
+        self = self.__floordiv__(value)
+        return self
+
+    def __rfloordiv__(self, value):
+        """
+        The floor division of modular integer
+        by np_mint|integer|float|bool is not defined.
+        """
+        return NotImplemented
+    
+    def __truediv__(self, value):
+        """
+        Implements the division of modular integer by 
+        np_mint|integer|float|bool.
+
+        Raises:
+            ValueError: If divider is negative
+            ZeroDivisionError: If divider is equal to 0.
+            ValueError: If np_mint value is not divisible by a divider.
+        """
+        processed_value = self._preprocess_value("__truediv__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        divider = processed_value if isinstance(processed_value, (int, np.integer)) else processed_value.value
+        if divider < 0:
+            raise ValueError("Not modular integer divider must be positive")
+        if divider == 0:
+            raise ZeroDivisionError("division by zero.")
+        if self.value % divider != 0:
+            raise ValueError(f"{self.value} is not divisible by {divider}.")
+        return self.__class__(self.value // divider, self.mod // gcd(self.mod, divider))
+    
+    def __itruediv__(self, value):
+        """Implements /= behaviour logic."""
+        self = self.__truediv__(value)
+        return self
+
+    def __rtruediv__(self, value):
+        """
+        The division of np_mint|integer|float|bool
+        by modular integer is not defined.
+        """
+        return NotImplemented
