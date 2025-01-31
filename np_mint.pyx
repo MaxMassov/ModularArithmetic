@@ -164,7 +164,7 @@ cdef class np_mint:
         Implements the subtraction of of 2 modular integers or 
         a modular integer and an integer|float|bool.
         """
-        processed_value = self._preprocess_value("__add__", value)
+        processed_value = self._preprocess_value("__sub__", value)
         if processed_value is NotImplemented:
             return NotImplemented
         return self.__class__(self.value - processed_value.value, self.mod)
@@ -178,7 +178,32 @@ cdef class np_mint:
         """
         Implements the subtraction of an integer|float|bool and a modular integer.
         """
-        processed_value = self._preprocess_value("__add__", value)
+        processed_value = self._preprocess_value("__rsub__", value)
         if processed_value is NotImplemented:
             return NotImplemented
         return self.__class__(processed_value.value - self.value, self.mod)
+
+    def __mul__(self, value):
+        """
+        Implements the multiplication of 2 modular integers or 
+        a modular integer and an integer|float|bool.
+        """
+        processed_value = self._preprocess_value("__mul__", value)
+        if processed_value is NotImplemented:
+            return NotImplemented
+        if isinstance(processed_value, (int, np.integer)):
+            if processed_value == 0:
+                return self.__class__(0, self.mod)
+            return self.__class__(self.value * processed_value, self.mod * processed_value)
+        return self.__class__(self.value * processed_value.value, self.mod)  
+    
+    def __imul__(self, value):
+        """Implements *= behaviour logic."""
+        self = self.__mul__(value)
+        return self
+
+    def __rmul__(self, value):
+        """
+        Implements the multiplications of an integer|float|bool and a modular integer.
+        """
+        return self.__mul__(value)
