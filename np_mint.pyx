@@ -401,6 +401,23 @@ cdef class np_mint:
     def __rlshift__(self, value):
         return NotImplemented
 
+    def __contains__(self, item: int|np.integer) -> bool:
+        """
+        Check if the residue class modulo self.mod of 
+        self.value contains item. If item is not instance of 
+        int, then False.
+
+        Args:
+            item (int|np.integer): value to check.
+
+        Return:
+            bool: True If the residue class modulo self.mod of 
+                self.value contains item which is instance of int.
+        """
+        if isinstance(item, (int, np.integer)):
+            return item % self.mod == self.value
+        return False
+
     def __eq__(self, value: object) -> bool:
         """
         Implements the logic of equality.
