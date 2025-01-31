@@ -557,3 +557,32 @@ cdef class np_mint:
             str: A number value converted to a string.
         """
         return f"{self.value}"
+
+    def __repr__(self) -> str:
+        """
+        Prints out a number with modulus (formal style).
+        
+        Returns:
+            str: A formal representation of the class instance.
+        """
+        return f"{self.__class__.__name__}({self.value}, mod={self.mod})"
+    
+    def parametric(self, param_name : str = "k") -> str:
+        """
+        Prints out a number with a variable part.
+
+        Args:
+            param_name (str, optional): The variable name for the output.
+                Must be represented by one word (no whitespace characters).
+                Defaults to "k".
+        
+        Returns:
+            str: A number value with mod * variable.
+
+        Raises:
+            ValueError: If there are any whitespace characters in the param_name.
+        """
+        if re.search(r"\s", param_name):
+            raise ValueError("param_name must be represented by one word.")
+        
+        return f"{self.value} + {self.mod} * {param_name}"
