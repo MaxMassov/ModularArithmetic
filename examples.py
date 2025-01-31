@@ -1,7 +1,6 @@
 import numpy as np
 from np_mint import np_mint
 
-print(np_mint(1, 2).int2mint)
 # Create modular integers
 a = np_mint(5, 7)
 b = np_mint(3, 7)
