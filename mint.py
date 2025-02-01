@@ -1,4 +1,4 @@
-from functools import wraps
+from functools import wraps, partial
 import inspect
 from typing import Callable
 import re
@@ -688,3 +688,7 @@ class mint:
             raise ValueError("param_name must be represented by one word.")
         
         return f"{self._value} + {self._mod} * {param_name}"
+
+mint3 = partial(mint, mod=3)
+mint5 = partial(mint, mod=5)
+mint7 = partial(mint, mod=7)
