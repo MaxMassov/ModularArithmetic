@@ -689,6 +689,7 @@ class mint:
         
         return f"{self._value} + {self._mod} * {param_name}"
 
+mint2 = partial(mint, mod=2)
 mint3 = partial(mint, mod=3)
 mint5 = partial(mint, mod=5)
 mint7 = partial(mint, mod=7)

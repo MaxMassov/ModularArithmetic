@@ -28,6 +28,8 @@ cdef class np_mint:
     cdef readonly INT_t vm_gcd
     cdef readonly cnp.dtype dtype
 
+    __array_priority__ = 20  # Higher than NumPy's default (10)
+
     def __cinit__(self, INT_t value, INT_t mod):
         """
         Initializes a mint instance.
@@ -53,6 +55,18 @@ cdef class np_mint:
     def int2mint(self) -> bool:
         """Access to _DISABLE_INT2MINT_CONVERSION value."""
         return not _DISABLE_INT2MINT_CONVERSION
+
+    @property
+    def __array_interface__(self):
+        """
+        Provides an interface for NumPy's C API.
+        """
+        return {
+            'version': 3,
+            'typestr': '|O',
+            'data': (self.value, False),
+            'shape': (),
+        }
 
     @classmethod
     def set_int2mint(cls, value: bool):
@@ -95,7 +109,7 @@ cdef class np_mint:
         global _DISABLE_INT2MINT_CONVERSION
         _DISABLE_INT2MINT_CONVERSION = True
 
-    def _preprocess_value(self, method, value):
+    cdef _preprocess_value(self, method, value):
         """
         Function that checks if the method called with a relevant value.
 
@@ -586,3 +600,85 @@ cdef class np_mint:
             raise ValueError("param_name must be represented by one word.")
         
         return f"{self.value} + {self.mod} * {param_name}"
+
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        """
+        Enables compatibility with NumPy ufuncs.
+        """
+        if method != '__call__':
+            return NotImplemented
+        
+        # Handle supported ufuncs
+        if ufunc == np.add:
+            return self.__add__(inputs[1])
+        elif ufunc == np.subtract:
+            return self.__sub__(inputs[1])
+        elif ufunc == np.multiply:
+            return self.__mul__(inputs[1])
+        elif ufunc == np.true_divide:
+            return self.__truediv__(inputs[1])
+        elif ufunc == np.power:
+            return self.__pow__(inputs[1])
+        elif ufunc == np.negative:
+            return self.__neg__()
+        elif ufunc == np.absolute:
+            return self.__abs__()
+        elif ufunc == np.equal:
+            return self.__eq__(inputs[1])
+        elif ufunc == np.not_equal:
+            return self.__ne__(inputs[1])
+        elif ufunc == np.less:
+            return self.__lt__(inputs[1])
+        elif ufunc == np.less_equal:
+            return self.__le__(inputs[1])
+        elif ufunc == np.greater:
+            return self.__gt__(inputs[1])
+        elif ufunc == np.greater_equal:
+            return self.__ge__(inputs[1])
+    
+        return NotImplemented
+
+    def __array__(self, dtype=None):
+        """
+        Converts the modular integer to a NumPy array.
+        """
+        if dtype is None:
+            dtype = self.dtype
+        return np.array(self.value, dtype=dtype)
+
+    def __array_finalize__(self, obj):
+        """
+        Finalizes the array creation process.
+        """
+        if obj is None:
+            return
+        self.value = getattr(obj, 'value', 0)
+        self.mod = getattr(obj, 'mod', 1)
+
+    def __array_wrap__(self, out_arr, context=None):
+        """
+        Wraps the output of ufuncs.
+        """
+        if out_arr.ndim == 0:
+            return self.__class__(int(out_arr), self.mod)
+        return np.asarray(out_arr)
+
+    def __array_function__(self, func, types, args, kwargs):
+        """
+        Enables compatibility with NumPy's array function protocol.
+        """
+        if func == np.add.reduce:
+            # Handle np.add.reduce
+            result = self.__class__(0, self.mod)  # Start with identity element for addition
+            for arg in args[0]:
+                result += arg
+            return result
+        elif func == np.multiply.reduce:
+            # Handle np.multiply.reduce
+            result = self.__class__(1, self.mod)  # Start with identity element for multiplication
+            for arg in args[0]:
+                result *= arg
+            return result
+        else:
+            # Return NotImplemented for unsupported functions
+            return NotImplemented
