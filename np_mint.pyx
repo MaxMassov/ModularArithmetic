@@ -141,10 +141,8 @@ cdef class np_mint:
         if isinstance(value, (float, bool)):
             value = int(value)
         if isinstance(value, (int, np.integer)):
-            if method in ["__mul__", "__rmul__", "__pow__", 
-                                    "__floordiv__", "__truediv__",
-                                    "__rfloordiv__", "__rtruediv__", 
-                                    "__lshift__"]:
+            if method in {'__floordiv__', '__lshift__', '__mul__', '__pow__', 
+                '__rfloordiv__', '__rmul__', '__rtruediv__', '__truediv__'}:
                 return value
             if _DISABLE_INT2MINT_CONVERSION:
                 raise TypeError(f"""Int to modular int conversion was disabled, 
@@ -160,12 +158,11 @@ cdef class np_mint:
         processed_value = self._preprocess_value("__add__", value)
         if processed_value is NotImplemented:
             return NotImplemented
-        return self.__class__(self.value + processed_value.value, self.mod)
+        return self.__class__((self.value + processed_value.value) % self.mod, self.mod)
 
     def __iadd__(self, value):
         """Implements += behaviour logic."""
-        self = self.__add__(value)
-        return self
+        return self.__add__(value)
 
     def __radd__(self, value):
         """
@@ -184,9 +181,8 @@ cdef class np_mint:
         return self.__class__(self.value - processed_value.value, self.mod)
     
     def __isub__(self, value):
-        """Implements -= behaviour logic."""
-        self = self.__sub__(value)
-        return self
+        """Implements -= behaviour logic.""" 
+        return self.__sub__(value)
 
     def __rsub__(self, value):
         """
@@ -208,8 +204,9 @@ cdef class np_mint:
         if isinstance(processed_value, (int, np.integer)):
             if processed_value == 0:
                 return self.__class__(0, self.mod)
-            return self.__class__(self.value * processed_value, self.mod * processed_value)
-        return self.__class__(self.value * processed_value.value, self.mod)  
+            new_mod = self.mod * processed_value
+            return self.__class__((self.value * value) % new_mod, new_mod)
+        return self.__class__((self.value * processed_value.value) % self.mod, self.mod)  
     
     def __imul__(self, value):
         """Implements *= behaviour logic."""
