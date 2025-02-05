@@ -664,18 +664,10 @@ cdef class np_mint:
         """
         Enables compatibility with NumPy's array function protocol.
         """
-        if func == np.add.reduce:
-            # Handle np.add.reduce
-            result = self.__class__(0, self.mod)  # Start with identity element for addition
-            for arg in args[0]:
-                result += arg
-            return result
-        elif func == np.multiply.reduce:
-            # Handle np.multiply.reduce
-            result = self.__class__(1, self.mod)  # Start with identity element for multiplication
-            for arg in args[0]:
-                result *= arg
-            return result
-        else:
-            # Return NotImplemented for unsupported functions
-            return NotImplemented
+        if func in {np.add.reduce, np.multiply.reduce}:
+            op = np.add if func == np.add.reduce else np.multiply
+            result = args[0][0]
+            for arg in args[0][1:]:
+                result = op(result, arg) % self.mod
+            return self.__class__(result, self.mod)
+        return NotImplemented
