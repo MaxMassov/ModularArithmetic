@@ -63,7 +63,7 @@ cdef class np_mint:
         """
         return {
             'version': 3,
-            'typestr': '|O',
+            'typestr': '|O',  # Object type
             'data': (self.value, False),
             'shape': (),
         }
@@ -237,7 +237,16 @@ cdef class np_mint:
                                  (gcd({self.value}, {self.vm_gcd}) = {self.vm_gcd})""")
             return self.__class__(pow(self.value, processed_value, self.mod), self.mod)
         return self.__class__(pow(self.value, processed_value.value, self.mod), self.mod)  
-    
+
+    def inv(self):
+        """
+        Computes the modular inverse of the modular integer.
+        """
+        if self.vm_gcd != 1:
+            raise ValueError(f"""base is not invertible for the given modulus 
+                                 (gcd({self.value}, {self.vm_gcd}) = {self.vm_gcd})""")
+        return self.__class__(pow(self.value, -1, self.mod), self.mod)
+
     def __ipow__(self, value):
         """Implements **= behaviour logic."""
         self = self.__pow__(value)
@@ -307,6 +316,15 @@ cdef class np_mint:
         by modular integer is not defined.
         """
         return NotImplemented
+
+    def __mod__(self, value):
+        """
+        Implements the modulo operation for 2 modular integers or 
+        a modular integer and an integer|float|bool.
+        """
+        if value != self.mod is NotImplemented:
+            return NotImplemented
+        return self
 
     def __trunc__(self):
         """
@@ -598,42 +616,39 @@ cdef class np_mint:
         
         return f"{self.value} + {self.mod} * {param_name}"
 
+    def as_array(self):
+        """Explicit conversion to a NumPy array of modular integers."""
+        return np.array([self], dtype=self.__class__)
+
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
         """
         Enables compatibility with NumPy ufuncs.
         """
         if method != '__call__':
             return NotImplemented
-        
-        # Handle supported ufuncs
-        if ufunc == np.add:
-            return self.__add__(inputs[1])
-        elif ufunc == np.subtract:
-            return self.__sub__(inputs[1])
-        elif ufunc == np.multiply:
-            return self.__mul__(inputs[1])
-        elif ufunc == np.true_divide:
-            return self.__truediv__(inputs[1])
-        elif ufunc == np.power:
-            return self.__pow__(inputs[1])
-        elif ufunc == np.negative:
-            return self.__neg__()
-        elif ufunc == np.absolute:
-            return self.__abs__()
-        elif ufunc == np.equal:
-            return self.__eq__(inputs[1])
-        elif ufunc == np.not_equal:
-            return self.__ne__(inputs[1])
-        elif ufunc == np.less:
-            return self.__lt__(inputs[1])
-        elif ufunc == np.less_equal:
-            return self.__le__(inputs[1])
-        elif ufunc == np.greater:
-            return self.__gt__(inputs[1])
-        elif ufunc == np.greater_equal:
-            return self.__ge__(inputs[1])
-    
-        return NotImplemented
+
+        # Convert all inputs to np.array if needed and apply the ufunc
+        arrays = []
+        array_output = False
+        for inp in inputs:
+            if isinstance(inp, self.__class__):
+                arrays.append(inp.as_array())
+            else:
+                array_output = isinstance(inp, np.ndarray)
+                arrays.append(inp)
+        result = getattr(ufunc, method)(*arrays, **kwargs)
+        if not array_output:
+            result = result[0]
+
+        # If the result is an array, convert it back to np_mint
+        if isinstance(result, np.ndarray):
+            return np.vectorize(lambda x: self.__class__(x % self.mod, self.mod))(result)
+
+        # If the result is a scalar, convert it back to np_mint
+        if np.isscalar(result):
+            return self.__class__(result % self.mod, self.mod)
+
+        return result
 
     def __array__(self, dtype=None):
         """
@@ -650,7 +665,9 @@ cdef class np_mint:
         if obj is None:
             return
         self.value = getattr(obj, 'value', 0)
-        self.mod = getattr(obj, 'mod', 1)
+        self.mod = getattr(obj, 'mod', 2)  # Default to 2, but ensure it's properly set elsewhere
+        self.vm_gcd = getattr(obj, 'vm_gcd', gcd(llabs(self.value), self.mod))
+        self.dtype = getattr(obj, 'dtype', np.dtype(INT_DTYPE))
 
     def __array_wrap__(self, out_arr, context=None):
         """
@@ -664,10 +681,19 @@ cdef class np_mint:
         """
         Enables compatibility with NumPy's array function protocol.
         """
-        if func in {np.add.reduce, np.multiply.reduce}:
-            op = np.add if func == np.add.reduce else np.multiply
-            result = args[0][0]
-            for arg in args[0][1:]:
-                result = op(result, arg) % self.mod
-            return self.__class__(result, self.mod)
+        if func in {np.add, np.subtract, np.multiply, np.true_divide, np.floor_divide, np.mod}:
+            op = {
+                np.add: '__add__',
+                np.subtract: '__sub__',
+                np.multiply: '__mul__',
+                np.true_divide: '__truediv__',
+                np.floor_divide: '__floordiv__',
+                np.mod: '__mod__'
+            }[func]
+
+            result = args[0]
+            for arg in args[1:]:
+                result = getattr(result, op)(arg)
+            return result
+
         return NotImplemented
