@@ -1,12 +1,14 @@
 import numpy as np
-from np_mint import np_mint, modular_matrix_inv
+from np_mint import np_mint, modular_matrix_inv, modular_matrix_det
 
 # Create modular integers
 a = np_mint(5, 7)
 b = np_mint(3, 7)
 arr = np.array([[a, b], [b, a]])
 print(np_mint(3, 5) * np.array([np_mint(3, 5), 5]))
+print(np_mint(3, 5) + np.array([np_mint(3, 5), 5]))
 print(modular_matrix_inv(arr))
+print(modular_matrix_det(arr))
 
 x = np.array([a])
 print(f"x = {x.dtype}")  # 5

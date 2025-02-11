@@ -9,6 +9,7 @@ from functools import wraps
 import inspect
 from typing import Callable
 import re
+import copy
 from np_mint cimport INT_t
 include "np_mint_utils.pyx"
 
@@ -46,6 +47,14 @@ cdef class np_mint:
         self.mod = mod
         self.vm_gcd = gcd(llabs(self.value), self.mod)
         self.dtype = np.dtype(INT_DTYPE)
+
+    def __deepcopy__(self, memo):
+        # Create a new instance of MyClass
+        new_instance = self.__class__(
+            value=copy.deepcopy(self.value, memo),
+            mod=copy.deepcopy(self.mod, memo)
+        )
+        return new_instance
 
     @property
     def int2mint(self) -> bool:
