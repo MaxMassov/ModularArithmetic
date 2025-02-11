@@ -3,6 +3,7 @@ import inspect
 from typing import Callable
 import re
 from math import gcd
+import copy
 
 class mint:
     """Represents an integer number from the specified modular system."""
@@ -45,6 +46,14 @@ class mint:
         self._mod = mod
         self._gcd = gcd(self._value, self._mod)
     
+    def __deepcopy__(self, memo):
+        # Create a new instance of MyClass
+        new_instance = self.__class__(
+            value=copy.deepcopy(self.value, memo),
+            mod=copy.deepcopy(self.mod, memo)
+        )
+        return new_instance
+
     @property
     def value(self):
         """Read-only property for value."""
