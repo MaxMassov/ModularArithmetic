@@ -1,9 +1,19 @@
 import numpy as np
-from np_mint import np_mint
+from np_mint import np_mint, modular_matrix_inv
 
 # Create modular integers
 a = np_mint(5, 7)
 b = np_mint(3, 7)
+arr = np.array([[a, b], [b, a]])
+print(np_mint(3, 5) * np.array([np_mint(3, 5), 5]))
+print(modular_matrix_inv(arr))
+
+x = np.array([a])
+print(f"x = {x.dtype}")  # 5
+arr = np.array([a, b])
+result = sum((a, b), np_mint(0, 7))
+print(np.add.reduce(np.array([np_mint(5, 7), np_mint(3, 7)])))
+print(f"Result: {result.__repr__()}")  # 1 (mod 7)
 
 # Individual operations
 print(f"a = {a}")  # 5
