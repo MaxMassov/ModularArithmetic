@@ -11,7 +11,9 @@ from typing import Callable
 import re
 import copy
 from np_mint cimport INT_t
+
 include "np_mint_utils.pyx"
+include "np_mint_partial.pyx"
 
 INT_DTYPE = np.int64
 

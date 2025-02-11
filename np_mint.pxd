@@ -1,4 +1,3 @@
-# np_mint.pxd
 cimport numpy as cnp
 
 ctypedef cnp.int64_t INT_t
@@ -11,3 +10,6 @@ cdef class np_mint:
 
     cdef np_mint inv(self)  # Declaring inv as a cdef method
     cdef _preprocess_value(self, method: str, value)
+
+cdef class Partial:
+    cdef readonly INT_t mod
