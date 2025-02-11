@@ -9,9 +9,10 @@ from functools import wraps
 import inspect
 from typing import Callable
 import re
+from np_mint cimport INT_t
+include "np_mint_utils.pyx"
 
 INT_DTYPE = np.int64
-ctypedef cnp.int64_t INT_t
 
 cdef inline INT_t gcd(INT_t a, INT_t b):
     while b != 0:
@@ -22,11 +23,6 @@ cdef bint _DISABLE_INT2MINT_CONVERSION = False
 
 cdef class np_mint:
     """NumPy compatible modular integer class"""
-    
-    cdef readonly INT_t value
-    cdef readonly INT_t mod
-    cdef readonly INT_t vm_gcd
-    cdef readonly cnp.dtype dtype
 
     __array_priority__ = 20  # Higher than NumPy's default (10)
 
@@ -238,7 +234,7 @@ cdef class np_mint:
             return self.__class__(pow(self.value, processed_value, self.mod), self.mod)
         return self.__class__(pow(self.value, processed_value.value, self.mod), self.mod)  
 
-    def inv(self):
+    cdef np_mint inv(self):
         """
         Computes the modular inverse of the modular integer.
         """
