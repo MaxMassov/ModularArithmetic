@@ -1,9 +1,9 @@
 /tests
 __pycache__/
-/.vscode
+/.vscode/settings.json
 /build
 /np_mint.egg-info
 np_mint.c
 np_mint.cp312-win_amd64.pyd
-example.py
+/*.egg-info
 .codegpt

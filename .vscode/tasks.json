@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Cython Extension",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                "if (-Not (Test-Path 'ModularArithmetic')) { mkdir 'ModularArithmetic' }; python setup.py build_ext --inplace"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
