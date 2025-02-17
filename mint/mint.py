@@ -365,9 +365,7 @@ class mint:
         Implements the modulo operation for 2 modular integers or 
         a modular integer and an integer|float|bool.
         """
-        if value != self.mod is NotImplemented:
-            return NotImplemented
-        return self
+        return NotImplemented
     
     def __imod__(self, value):
         """Implements %= behaviour logic."""
@@ -669,8 +667,25 @@ class mint:
         """
         return bool(self.__int__())
     
-    def __index__(self) -> int:
-        return NotImplemented
+    def __getitem__(self, index: int|bool|float) -> int:
+        """
+        Implements the logic of indexing elements of the equivalence class.
+
+        Args:
+            index (int|bool|float): The coefficient of the modulus.
+
+        Returns:
+            int: Returns an integer with a remainder equal to self.value 
+                and greater than self.mod * index.
+
+        Raises:
+            IndexError: If the index is not an integer (bool or float).
+        """
+        if isinstance(index, (bool, float)):
+            index = int(index)
+        if not isinstance(index, int):
+            raise IndexError("value must be an integer.")
+        return self._value + self._mod * index
 
     def __str__(self) -> str:
         """

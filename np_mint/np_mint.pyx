@@ -329,8 +329,11 @@ cdef class np_mint:
         Implements the modulo operation for 2 modular integers or 
         a modular integer and an integer|float|bool.
         """
-        if value != self.mod is NotImplemented:
-            return NotImplemented
+        return NotImplemented
+
+    def __imod__(self, value):
+        """Implements %= behaviour logic."""
+        self = self.__mod__(value)
         return self
 
     def __trunc__(self):
@@ -584,7 +587,27 @@ cdef class np_mint:
             bool: converted modular integer value.
         """
         return bool(self.__int__())
-    
+
+    def __getitem__(self, index: int|bool|float) -> int:
+        """
+        Implements the logic of indexing elements of the equivalence class.
+
+        Args:
+            index (int|bool|float): The coefficient of the modulus.
+
+        Returns:
+            int: Returns an integer with a remainder equal to self.value 
+                and greater than self.mod * index.
+
+        Raises:
+            IndexError: If the index is not an integer (bool or float).
+        """
+        if isinstance(index, (bool, float)):
+            index = int(index)
+        if not isinstance(index, int):
+            raise IndexError("value must be an integer.")
+        return self._value + self._mod * index
+
     def __str__(self) -> str:
         """
         Prints out a number without modulus (informal style).
@@ -649,7 +672,7 @@ cdef class np_mint:
 
         # If the result is an array, convert it back to np_mint
         if isinstance(result, np.ndarray):
-            return np.vectorize(lambda x: self.__class__(x % self.mod, self.mod))(result)
+            return np.vectorize(lambda x: self.__class__(x, self.mod))(result)
 
         # If the result is a scalar, convert it back to np_mint
         if np.isscalar(result):
@@ -695,7 +718,6 @@ cdef class np_mint:
                 np.multiply: '__mul__',
                 np.true_divide: '__truediv__',
                 np.floor_divide: '__floordiv__',
-                np.mod: '__mod__'
             }[func]
 
             result = args[0]

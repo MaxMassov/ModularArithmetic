@@ -5,7 +5,7 @@ import numpy as np
 # Define the Cython extension for np_mint
 extensions = [
     Extension(
-        "ModularArithmetic.np_mint",
+        "np_mint",
         sources=["np_mint/np_mint.pyx"],
         extra_compile_args=["/std:c++17"],  # Enable C++17
         include_dirs=[np.get_include()],    # Include NumPy headers
