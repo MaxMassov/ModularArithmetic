@@ -1,5 +1,5 @@
 import numpy as np
-from np_mint import np_mint, modular_matrix_inv, modular_matrix_det
+from ModularArithmetic.np_mint import np_mint, modular_matrix_inv, modular_matrix_det
 
 # Create modular integers
 a = np_mint(5, 7)

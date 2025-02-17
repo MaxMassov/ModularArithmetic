@@ -48,7 +48,7 @@ If you need to build from source:
 
 1. Clone the repository:
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/MaxMassov/ModularArithmetic/
    cd ModularArithmetic
    ```
 
@@ -86,15 +86,44 @@ mod_arr = np_mint(arr, mod=7)  # Convert to modular array
 
 ## Documentation
 
-For detailed usage instructions and API documentation, visit our [documentation page](../../../c:/Users/Maksim/Downloads/link_to_docs).
+The following examples and explanation are shown for both classes mint and np_mint (the numpy version of mint) because of their simirality. The main goal of all opeartions is to follow the rules of modular arithmetic.
+
+### Initialization
+
+```python
+from ModularArithmetic.mint import mint
+from ModularArithmetic.np_mint import np_mint
+
+x = mint(5, mod=3) # creates a mint instance that represents 5 in the equivalence class modulo 3
+y = mint(13, 15) # creates a mint instance that represents 13 in the equivalence class modulo 15
+
+z = mint(4, mod=1) # raises ValueError, because modulo must be at least 2
+
+x = np_mint(5, mod=3)
+y = np_mint(13, 15)
+```
+
+There are also subclasses for the equivalence class of 2, 3, 5 and 7.
+
+```python
+from ModularArithmetic.mint import mint, mint2, mint3, mint5, mint7
+from ModularArithmetic.np_mint import np_mint, np_mint2, np_mint3, np_mint5, np_mint7
+
+x = mint5(2) # creates a mint instance that represents 2 in the equivalence class modulo 5
+y = mint3(16) # creates a mint instance that represents 16 in the equivalence class modulo 3
+
+x = np_mint2(5)
+y = np_mint7(13)
+```
+
 
 ## Contributing
 
-We welcome contributions! Please see our [contributing guidelines](../../../c:/Users/Maksim/Downloads/link_to_contributing) for details on how to get involved.
+We welcome contributions! Please see our [contributing guidelines]() for details on how to get involved.
 
 ## License
 
-This project is licensed under [insert license] - see the [LICENSE](../../../c:/Users/Maksim/Downloads/link_to_license) file for details.
+This project is licensed under [insert license] - see the [LICENSE]() file for details.
 
 ## Citation
 
@@ -103,8 +132,8 @@ If you use this package in your research, please cite:
 ```bibtex
 @software{ModularArithmetic,
   title = {ModularArithmetic: Python/NumPy Modular Arithmetic Implementation},
-  author = {[Author Names]},
-  year = {[Year]},
-  url = {[Repository URL]}
+  author = {[Maksim Massov]},
+  year = {[2025]},
+  url = {[https://github.com/MaxMassov/ModularArithmetic/]}
 }
 ```
