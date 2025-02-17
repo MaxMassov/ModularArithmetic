@@ -355,7 +355,13 @@ class mint:
         return NotImplemented
     
     def __mod__(self, value):
-        return NotImplemented
+        """
+        Implements the modulo operation for 2 modular integers or 
+        a modular integer and an integer|float|bool.
+        """
+        if value != self.mod is NotImplemented:
+            return NotImplemented
+        return self
     
     def __imod__(self, value):
         """Implements %= behaviour logic."""
