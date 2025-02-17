@@ -284,6 +284,12 @@ class mint:
             return self.__class__(pow(self._value, value, self._mod), self._mod)
         return self.__class__(pow(self._value, value.value, self._mod), self._mod)  
     
+    def inv(self):
+        """
+        Computes the modular inverse of the modular integer.
+        """
+        return self ** -1; 
+
     def __ipow__(self, value):
         """Implements **= behaviour logic."""
         self = self.__pow__(value)
