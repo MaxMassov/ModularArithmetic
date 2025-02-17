@@ -220,10 +220,10 @@ There are also other options to change the _DISABLE_INT2MINT_CONVERSION variable
    * mint.disable_int2mint() -- set its value to True
 
 The value of a variable affects the operation of only the following methods:
-   * multiplication
-   * powering
-   * division 
-   * bit shifting
+   * multiplication (`__mul__`, `__rmul__`),
+   * powering (`__pow__`),
+   * division (`__floordiv__`, `__truediv__`, `__rfloordiv__`, `__rtruediv__`),
+   * bit shifting (`__lshift__`)
 
 ## Contributing
 
