@@ -162,7 +162,7 @@ print(b.__repr__()) # mint(4, mod=7)
 print(b.parametric(param_name="n")) # 4 + 7 * n
 ```
 
-### Type conversion
+### Type Conversion
 
 The instance of mint or np_mint can be converted to int of float:
 
@@ -174,14 +174,16 @@ print(int(a)) # 13
 # mint.to_int treats value as an integer in a given base 
 print(a.to_int(base=3)) # 7 
 print(float(a)) # 13.0
+print(bool(a)) # True
 ```
 ```python
 from ModularArithmetic.np_mint import np_mint 
 
-b = np_mint(4, 7)
-print(int(b)) # 4
-print(b.to_int(5)) # 4
-print(float(b)) # 4.0
+b = np_mint(14, 7)
+print(int(b)) # 0
+print(b.to_int(5)) # 0
+print(float(b)) # 0.0
+print(bool(b)) # False
 ```
 
 As it was shown above int, float and bool values can be used in initialization of modular integer instances. However, these conversion could be prohibited by setting static class variable _DISABLE_INT2MINT_CONVERSION to True. There is an example, how it works:
@@ -220,10 +222,51 @@ There are also other options to change the _DISABLE_INT2MINT_CONVERSION variable
    * mint.disable_int2mint() -- set its value to True
 
 The value of a variable affects the operation of only the following methods:
-   * multiplication (`__mul__`, `__rmul__`),
-   * powering (`__pow__`),
-   * division (`__floordiv__`, `__truediv__`, `__rfloordiv__`, `__rtruediv__`),
-   * bit shifting (`__lshift__`)
+   * addition (`__add__`, `__iadd__`, `__radd__`),
+   * subtraction (`__sub__`, `__isub__`, `__rsub__`),
+   * comparisons (`__lt__`, `__le__`, `__gt__`, `__ge__`)
+
+### Math Operations
+
+Both classes support the following math operations:
+   * addition `+`, `+=` (`__add__`, `__iadd__`, `__radd__`),
+   * subtraction `-`, `-=` (`__sub__`, `__isub__`, `__rsub__`),
+   * multiplication `*`, `*=` (`__mul__`, `__imul__`, `__rmul__`),
+   * powering `*`, `**=` (`__pow__`, `__ipow__`, `__rpow__`),
+   * division `//`, `//=`, `/`, `/=` (`__floordiv__`, `__ifloordiv__`, `__truediv__`, `__itruediv__`),
+   * negation `-` (`__neg__`),
+   * inversion (`inv`),
+   * some other methods (`__trunc__`, `__ceil__`, `__floor__`, `__round__`, `__abs__`, `__pos__`)
+
+### Comparisons
+
+For both classes are defined behaviours of the following comparision operators:
+   * equality `==` (`__eq__`),
+   * unequality `!=` (`__ne__`),
+   * greater `>` (`__gt__`),
+   * greater or equal `>=` (`__ge__`),
+   * less `<` (`__lt__`), 
+   * less or equal `<=` (`__le__`)
+   
+### Iteriable operations
+
+For both classes are defined behaviours of the following iteriable operators:
+   * indexing `[]` (`__getitem__`)
+   * membership `in` (`__in__`)
+
+### Bitwise Opeartions
+
+Both classes support the following bit operations:
+   * bit inversion `~` (`__invert__`),
+   * bit left shifting `<<`, `<<=` (`__lshift__`, `__ilshift__`)
+
+### Numpy integration
+
+The np_mint class can be vectorized in Numpy. The integration supports the following methods:
+   * vectorization (`np.array`)
+   * math operations (`np.add`, `np.subtract`, `np.multiply`, `np.true_divide`, `np.floor_divide`),
+   * math reduced operations
+
 
 ## Contributing
 
