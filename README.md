@@ -124,6 +124,22 @@ a = np_mint2(5)
 b = np_mint7(13)
 ```
 
+You can also define your own equivalence class:
+
+```python
+from functools import partial
+from ModularArithmetic.mint import mint
+
+my_mint = partial(mint, mod=13) # creates a partial class that represents the equivalence class modulo 13
+x = my_mint(4) # creates a my_mint instance that represents 4 in the equivalence class modulo 13
+```
+```python
+from ModularArithmetic.np_mint import np_mint, Partial
+
+my_np_mint = Partial(17) # creates a partial class that represents the equivalence class modulo 17
+x = my_mint(10) # creates a my_mint instance that represents 10 in the equivalence class modulo 17
+```
+
 ### Attributes
 
 All instance's attributes are const and cannot be changed.
@@ -217,9 +233,9 @@ print(b + 1) # raises TypeError
 ```
 
 There are also other options to change the _DISABLE_INT2MINT_CONVERSION variable state:
-   * mint.change_int2mint() -- toggles its state to the opposite value
-   * mint.activate_int2mint() -- set its value to False
-   * mint.disable_int2mint() -- set its value to True
+   * `mint.change_int2mint()` -- toggles its state to the opposite value
+   * `mint.activate_int2mint()` -- set its value to False
+   * `mint.disable_int2mint()` -- set its value to True
 
 The value of a variable affects the operation of only the following methods:
    * addition (`__add__`, `__iadd__`, `__radd__`),
@@ -266,7 +282,6 @@ The np_mint class can be vectorized in Numpy. The integration supports the follo
    * vectorization (`np.array`)
    * math operations (`np.add`, `np.subtract`, `np.multiply`, `np.true_divide`, `np.floor_divide`),
    * math reduced operations
-
 
 ## Contributing
 
