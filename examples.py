@@ -2,16 +2,26 @@ import numpy as np
 from mint.mint import mint
 from np_mint import np_mint, modular_matrix_inv, modular_matrix_det
 
-# Create modular integers
-a = np_mint(5, 7)
-b = np_mint(3, 7)
-arr = np.array([[a, b], [b, a]])
+# Define the modulus
+mod = 7
+
+# Create np_mint objects
+a = np_mint(1, mod)
+b = np_mint(2, mod)
+c = np_mint(3, mod)
+d = np_mint(4, mod)
+e = np_mint(5, mod)
+f = np_mint(6, mod)
+
+# Create a matrix of np_mint objects
+arr = np.array([[a, b], [c, d]])
+
 print(np_mint(3, 5) * np.array([np_mint(3, 5), 5]))
 print(np_mint(3, 5) + np.array([np_mint(3, 5), 5]))
 print(modular_matrix_inv(arr))
 print(modular_matrix_det(arr))
 
-x = np.array([a])
+x = np.array(a)
 print(f"x = {x.dtype}")  # 5
 arr = np.array([a, b])
 result = sum((a, b), np_mint(0, 7))

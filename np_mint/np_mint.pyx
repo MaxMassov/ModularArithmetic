@@ -4,10 +4,10 @@
 cimport numpy as cnp
 cnp.import_array()
 from libc.stdlib cimport llabs
+from cpython.object cimport PyObject
+from cpython.ref cimport Py_INCREF
 import numpy as np
-from functools import wraps
-import inspect
-from typing import Callable
+import struct
 import re
 import copy
 from np_mint cimport INT_t
@@ -24,10 +24,27 @@ cdef inline INT_t gcd(INT_t a, INT_t b):
 
 cdef bint _DISABLE_INT2MINT_CONVERSION = False
 
+cdef dict np_methods = {
+    np.round: '__round__',
+    np.around: '__round__',
+    np.fix: '__round__',
+    np.floor: '__floor__',
+    np.ceil: '__ceil__',
+    np.trunc: '__trunc__',
+    np.add: '__add__',
+    np.positive: '__pos__',
+    np.negative: '__neg__',
+    np.multiply: '__mul__',
+    np.power: '__pow__',
+    np.subtract: '__sub__',
+    np.true_divide: '__truediv__',
+    np.floor_divide: '__floordiv__',
+}
+
 cdef class np_mint:
     """NumPy compatible modular integer class"""
 
-    __array_priority__ = 20  # Higher than NumPy's default (10)
+    __array_priority__ = 1000.0  # Higher than NumPy's default (10)
 
     def __cinit__(self, INT_t value, INT_t mod):
         """
@@ -49,6 +66,8 @@ cdef class np_mint:
         self.mod = mod
         self.vm_gcd = gcd(llabs(self.value), self.mod)
         self.dtype = np.dtype(INT_DTYPE)
+        self._ptr[0] = <PyObject*>self
+        Py_INCREF(self)  # Keep a reference so the pointer remains valid
 
     def __deepcopy__(self, memo):
         # Create a new instance of MyClass
@@ -71,9 +90,37 @@ cdef class np_mint:
         return {
             'version': 3,
             'typestr': '|O',  # Object type
-            'data': (self.value, False),
+            'data': (<size_t>&self._ptr[0], False),
             'shape': (),
         }
+
+    def __bytes__(self):
+        """
+        Returns a bytes representation of the object.
+        Here we pack the pointer to the object.
+        """
+        return struct.pack("P", <size_t><PyObject*>self)
+
+    def __getbuffer__(self, Py_buffer* view, int flags):
+        """
+        Provides a memory buffer interface.
+        """
+        view.buf = <char*>&self._ptr[0]  # Point to our pointer array
+        view.len = sizeof(PyObject*)  # Single pointer size
+        view.readonly = 0
+        view.itemsize = sizeof(PyObject*)
+        view.ndim = 0
+        view.shape = NULL
+        view.strides = NULL
+        view.suboffsets = NULL
+        view.format = "O"  # Pointer format
+        view.obj = <object>self  # Keep reference
+
+    def __releasebuffer__(self, Py_buffer *view):
+        """
+        No extra cleanup is needed here.
+        """
+        pass
 
     @classmethod
     def set_int2mint(cls, value: bool):
@@ -269,6 +316,24 @@ cdef class np_mint:
             return NotImplemented
         return self.__class__(pow(processed_value.value, self.value, self.mod), self.mod)
 
+    def exp(self):
+        """
+        Implements the exponential function for the modular integer.
+        """
+        return self.__rpow__(np.e)
+
+    def expm1(self):
+        """
+        Implements exp(self) - 1 for the modular integer.
+        """
+        return self.__rpow__(np.e) - 1
+
+    def exp2(self):
+        """
+        Implements 2**self for the modular integer.
+        """
+        return self.__rpow__(2)
+
     def __floordiv__(self, value):
         """
         Implements the floor division of modular integer by 
@@ -362,7 +427,7 @@ cdef class np_mint:
             np_mint: self.
         """
         return self
-    
+
     def __round__(self, ndigits: int = None):
         """
         Returns rounded value.
@@ -372,6 +437,10 @@ cdef class np_mint:
         """
         return self
 
+    def rint(self):
+        """Rounds the value of the modular integer."""
+        return self.__round__()
+
     def __abs__(self):
         """
         Returns absolute value (self).
@@ -380,6 +449,10 @@ cdef class np_mint:
             np_mint: self.
         """
         return self
+
+    def fabs(self):
+        """The implementation of np.fabs method."""
+        return self.__abs__()
 
     def __pos__(self):
         """
@@ -625,7 +698,7 @@ cdef class np_mint:
             str: A formal representation of the class instance.
         """
         return f"{self.__class__.__name__}({self.value}, mod={self.mod})"
-    
+
     def parametric(self, param_name : str = "k") -> str:
         """
         Prints out a number with a variable part.
@@ -648,7 +721,7 @@ cdef class np_mint:
 
     def as_array(self):
         """Explicit conversion to a NumPy array of modular integers."""
-        return np.array([self], dtype=self.__class__)
+        return np.array([self], dtype=object)
 
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
         """
@@ -668,11 +741,11 @@ cdef class np_mint:
                 arrays.append(inp)
         result = getattr(ufunc, method)(*arrays, **kwargs)
         if not array_output:
-            result = result[0]
+            result = result.item()
 
         # If the result is an array, convert it back to np_mint
         if isinstance(result, np.ndarray):
-            return np.vectorize(lambda x: self.__class__(x, self.mod))(result)
+            return np.array([self.__class__(x, self.mod) for x in np.ravel(result)]).reshape(result.shape)
 
         # If the result is a scalar, convert it back to np_mint
         if np.isscalar(result):
@@ -685,8 +758,8 @@ cdef class np_mint:
         Converts the modular integer to a NumPy array.
         """
         if dtype is None:
-            dtype = self.dtype
-        return np.array(self.value, dtype=dtype)
+            dtype = object
+        return np.array([self], dtype=dtype)
 
     def __array_finalize__(self, obj):
         """
@@ -711,18 +784,11 @@ cdef class np_mint:
         """
         Enables compatibility with NumPy's array function protocol.
         """
-        if func in {np.add, np.subtract, np.multiply, np.true_divide, np.floor_divide, np.mod}:
-            op = {
-                np.add: '__add__',
-                np.subtract: '__sub__',
-                np.multiply: '__mul__',
-                np.true_divide: '__truediv__',
-                np.floor_divide: '__floordiv__',
-            }[func]
-
+        operation = np_methods.get(func)
+        if operation is not None:
             result = args[0]
             for arg in args[1:]:
-                result = getattr(result, op)(arg)
+                result = getattr(result, operation)(arg)
             return result
 
         return NotImplemented

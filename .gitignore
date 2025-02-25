@@ -7,3 +7,4 @@ np_mint.c
 np_mint.cp312-win_amd64.pyd
 /*.egg-info
 .codegpt
+launch.json
